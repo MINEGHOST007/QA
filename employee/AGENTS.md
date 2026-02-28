@@ -82,51 +82,84 @@ Given both the user test case and expanded test plan, follow this sequence:
 
 ## Output Format
 
+Your output will be consumed by a **Playwright MCP agent** that uses `@playwright/mcp` tools
+(`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`, `browser_select_option`,
+`browser_wait_for`, `browser_run_code`, etc.). Frame everything as a **suggestion** — the real UI
+may have changed since these old scripts were written.
+
 ```
-## Script Search Results for: <test case title>
+## Suggested Playwright Flow
 
-### Match 1: <script filename>
-- **File**: scripts/<path>
-- **Relevance**: <why this script matches — reference specific expanded plan steps it covers>
-- **Class**: <test class name>
-- **Key Methods**: <list of test methods>
+> ⚠️ WARNING: This is an ESTIMATED flow based on retired Selenium scripts.
+> Selectors, URLs, and field names may have changed in the current UI.
+> ALWAYS call `browser_snapshot` first to discover actual page elements.
+> Do NOT blindly trust the selectors below — verify them on the real page.
 
-#### XPaths & Selectors Used
-| # | Element | Locator | Type | Expanded Plan Match |
-|---|---------|---------|------|---------------------|
-| 1 | <element> | `<xpath or css>` | XPath/CSS | <matching selector from expanded plan, or "—"> |
-...
+### Test: <test case title>
+Target URL: <full URL from script or expanded plan>
 
-#### Step-by-Step Process
-| # | Action | Code Snippet | Expanded Plan Step |
-|---|--------|-------------|---------------------|
-| 1 | <what happens> | `<relevant code line>` | <matching step # from expanded plan, or "—"> |
-...
+### Suggested Steps
 
----
+| # | MCP Tool | element | action_detail | expected |
+|---|----------|---------|---------------|----------|
+| 1 | browser_navigate | — | url: "<target URL>" | Page loads |
+| 2 | browser_snapshot | — | — | Inspect actual elements, find real refs |
+| 3 | browser_type | "<human-readable name>" | text: "<value from script>" | Field filled |
+| ... | ... | ... | ... | ... |
+| N | browser_click | "<button description>" | — | Action performed |
+| N+1 | browser_wait_for | — | text: "<expected text>" | Verification |
+| N+2 | browser_snapshot | — | — | Verify final state |
 
-### Match 2: <script filename>
-(same structure as Match 1)
+### How to Find Elements (Use browser_snapshot)
 
----
+These are HINTS from old scripts — the real UI may use different selectors or labels.
+After calling `browser_snapshot`, match elements using these clues (try in order):
 
-### Selector Mapping
-| Expanded Plan Selector | Selenium Script Equivalent | Script File |
-|------------------------|-----------------------------|-------------|
-| `[data-testid="btn-submit-record"]` | `//button[@data-testid='form-submit-btn']` | test_form_submission.py |
-...
+1. **By data-testid** (most reliable if unchanged):
+   - <element name> → `data-testid="<value from script>"`
+   - ...
 
-### Search Strategy Used
-- Index terms searched: <list>
-- Grep patterns used: <list — include selector-based greps>
-- TF-IDF query: <if used>
-- Total scripts scanned: <count>
-- Candidates considered: <count>
+2. **By visible label/text** (fallback if testids changed):
+   - Look for input with label "<label text>"
+   - Look for button with text "<button text>"
+   - ...
 
-### Gaps / Notes
-- <any expanded plan steps NOT covered by found scripts>
-- <selector mismatches between expanded plan (Playwright) and old scripts (Selenium)>
-- <suggestions for what a new script would need>
+3. **By role** (last resort):
+   - Look for `role="button"` with name "<name>"
+   - Look for `role="textbox"` near label "<label>"
+   - ...
+
+> ⚠️ If an element is NOT found in the snapshot, do NOT guess.
+> Try `browser_take_screenshot` to visually inspect, or scroll with
+> `browser_press_key` (PageDown) then `browser_snapshot` again.
+
+### Fallback: browser_run_code
+
+If snapshot-based steps don't work, try this as a single `browser_run_code` call.
+NOTE: These selectors are estimated — they may need adjustment.
+
+```js
+async (page) => {
+  await page.goto('<target URL>');
+  // Fill form fields (estimated from old scripts)
+  await page.getByTestId('<testid>').fill('<value>');
+  // ... more fields ...
+  await page.getByTestId('<submit-testid>').click();
+  // Verify
+  const result = page.getByTestId('<result-testid>');
+  await result.waitFor({ state: 'visible', timeout: 10000 });
+  return result.textContent();
+}
+```
+
+### Source (Old Selenium Scripts)
+- Primary: `<filename>` (similarity: <score>) — <brief caveat>
+- Secondary: `<filename>` (similarity: <score>) — <brief caveat>
+
+### Known Gaps — Things to Verify on Real Page
+- <specific selector/URL/field that may differ>
+- <any step not covered by old scripts>
+- <any text content that is unknown>
 ```
 
 ## Search Strategy
@@ -147,6 +180,10 @@ Given both the user test case and expanded test plan, follow this sequence:
 - Never fabricate script contents — only report what you actually find in the code.
 - Always return **exactly 2** matching scripts (or fewer if the library has no good matches).
 - If no relevant scripts exist, say so explicitly and describe what kind of script would be needed.
-- Include actual XPaths and code snippets from the scripts — this is the primary value you provide.
-- Map old Selenium selectors to expanded plan Playwright selectors in the Selector Mapping table.
-- Keep reasoning brief; invest tokens in the structured output with real code.
+- **Frame output as SUGGESTION**: Use words like "estimated", "suggested", "may differ". Never present old selectors as guaranteed correct.
+- **Always include `browser_snapshot` steps**: Tell the Playwright agent to snapshot before interacting and to use the snapshot to find actual element refs.
+- **Include test data values**: Extract default values from helper methods (e.g., `_fill_form(first_name="John")`). Never say "see helper method".
+- **Never repeat sections**: Each heading must appear exactly once in the output.
+- **Known Gaps must be actionable**: List specific things the Playwright agent should verify on the real page (changed URLs, missing selectors, unknown text).
+- Keep reasoning brief; invest tokens in the structured output with real data.
+

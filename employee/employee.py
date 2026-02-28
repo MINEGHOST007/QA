@@ -209,7 +209,7 @@ def create_employee_agent(model_id: str | None = None) -> Any:
     _model_id = model_id or os.environ.get(
         "EMPLOYEE_AGENT_MODEL", "arcee-ai/trinity-large-preview:free"
     )
-    model = ChatOpenRouter(model=_model_id, temperature=0, max_tokens=8192)
+    model = ChatOpenRouter(model=_model_id, temperature=0, max_tokens=8192, presence_penalty=0.3)
 
     # Retry middleware — catches transient API failures and malformed responses
     model_retry = ModelRetryMiddleware(
@@ -400,13 +400,16 @@ Examples:
             "3. Call `grep_scripts()` for EACH concrete selector from the expanded plan (e.g. 'submit.*btn', 'success.*message', 'toast').\n"
             "4. Call `grep_scripts()` for action patterns found in the steps (e.g. 'click.*submit', 'find_element.*form').\n"
             "5. Call `find_similar_scripts()` with the full test case + key selectors for TF-IDF matching.\n"
-            "6. Read the top candidates with `get_script_outline()` and `read_script()`.\n"
-            "7. **Select the 2 best matches** and produce the full output format from AGENTS.md, including:\n"
-            "   - XPaths & Selectors table with Expanded Plan Match column\n"
-            "   - Step-by-step process mapped to expanded plan steps\n"
-            "   - Selector Mapping table (expanded plan selectors → Selenium equivalents)\n"
-            "   - Search strategy summary\n"
-            "   - Gaps and notes"
+            "6. Read the top candidates with `get_script_outline()` and `read_script()`. "
+            "Extract test data values from helper methods (e.g. default params in `_fill_form()`).\n"
+            "7. **Select the 2 best matches** and produce the 'Suggested Playwright Flow' output from AGENTS.md:\n"
+            "   - Suggested Steps table using Playwright MCP tool names (browser_navigate, browser_snapshot, browser_type, browser_click, etc.)\n"
+            "   - 'How to Find Elements' section with data-testid hints, label fallbacks, and role fallbacks\n"
+            "   - 'Fallback: browser_run_code' block with a ready-to-use Playwright JS function\n"
+            "   - Source scripts with similarity scores and caveats\n"
+            "   - 'Known Gaps' with specific things to verify on the real page\n"
+            "   IMPORTANT: Frame everything as a SUGGESTION. Include warnings that selectors are estimated. "
+            "Do NOT repeat any section. Each heading must appear exactly once."
         )
     else:
         prompt = (
