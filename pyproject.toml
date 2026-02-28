@@ -8,6 +8,7 @@ dependencies = [
     "deepagents-cli>=0.0.25",
     "jsonpatch>=1.33",
     "langchain-core>=1.2.16",
+    "langchain-mcp-adapters>=0.2.1",
     "langchain-openrouter>=0.0.2",
     "rich>=14.3.3",
 ]

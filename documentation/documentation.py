@@ -205,7 +205,7 @@ def create_documentation_agent(model_id: str | None = None) -> Any:
     _model_id = model_id or os.environ.get(
         "DOC_AGENT_MODEL", "arcee-ai/trinity-large-preview:free"
     )
-    model = ChatOpenRouter(model=_model_id, temperature=0, max_tokens=8192)
+    model = ChatOpenRouter(model=_model_id, temperature=0.5, max_tokens=8192)
 
     # Retry middleware — catches transient API failures and malformed responses
     model_retry = ModelRetryMiddleware(
