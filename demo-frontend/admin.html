@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin Panel — Records Management System">
+  <title>Admin Panel — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-brand"><div class="brand-icon">📋</div><span>Records Manager</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-item" data-testid="nav-item-dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></a>
+        <a href="records.html" class="nav-item" data-testid="nav-item-records"><span class="nav-icon">📁</span><span class="nav-label">Records</span></a>
+        <a href="reports.html" class="nav-item" data-testid="nav-item-reports"><span class="nav-icon">📈</span><span class="nav-label">Reports</span></a>
+        <div class="nav-section-title">Account</div>
+        <a href="settings.html" class="nav-item" data-testid="nav-item-settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></a>
+        <a href="admin.html" class="nav-item" data-testid="nav-item-admin"><span class="nav-icon">🛡</span><span class="nav-label">Admin Panel</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="header">
+        <div class="header-left">
+          <button class="btn-sidebar-toggle" data-testid="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+          <nav class="breadcrumb" data-testid="breadcrumb">
+            <a href="dashboard.html">Home</a><span class="separator">/</span><span class="current">Admin Panel</span>
+          </nav>
+        </div>
+        <div class="header-right">
+          <div class="notifications-wrapper">
+            <button class="btn btn-icon" data-testid="btn-notifications" onclick="toggleNotifications()">🔔<span class="notification-badge" data-testid="notification-unread-count">3</span></button>
+            <div id="notifications-panel" class="notifications-panel" data-testid="notifications-panel"><div class="notifications-header"><span style="font-weight:600;color:var(--text-white);">Notifications</span></div></div>
+          </div>
+          <div class="user-menu-wrapper">
+            <button class="user-avatar" data-testid="user-avatar-menu" onclick="toggleUserMenu()">JD</button>
+            <div id="user-dropdown" class="user-dropdown">
+              <div class="user-dropdown-header"><div class="user-dropdown-name" data-testid="user-display-name">John Doe</div></div>
+              <a href="login.html" class="user-dropdown-item danger" data-testid="menu-item-logout">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content" data-testid="main-content">
+        <div class="page-header">
+          <h1>Admin Panel</h1>
+        </div>
+
+        <!-- Admin Tabs -->
+        <div id="admin-tabs">
+          <div class="tabs">
+            <button class="tab tab--active" data-testid="admin-tab-users" data-tab="users" onclick="switchTab('users','admin-tabs')">👥 Users</button>
+            <button class="tab" data-testid="admin-tab-roles" data-tab="roles" onclick="switchTab('roles','admin-tabs')">🛡 Roles</button>
+          </div>
+
+          <!-- Users Tab -->
+          <div id="tab-users" class="tab-content active">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-lg);">
+              <h3 style="color:var(--text-white);">User Management</h3>
+              <button class="btn btn-primary" data-testid="btn-invite-user" onclick="openModal('modal-invite')">+ Invite User</button>
+            </div>
+
+            <div class="table-container" data-testid="admin-users-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Last Active</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>John Doe</strong></td>
+                    <td>john.doe@company.com</td>
+                    <td><span class="badge badge--approved" style="text-transform:none;">Admin</span></td>
+                    <td><span style="color:var(--success);">● Active</span></td>
+                    <td>Just now</td>
+                    <td><span class="text-muted" style="font-size:var(--font-size-xs);">Current user</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sarah Connor</strong></td>
+                    <td>sarah.connor@company.com</td>
+                    <td><span class="badge badge--locked" style="text-transform:none;">Reviewer</span></td>
+                    <td><span style="color:var(--success);">● Active</span></td>
+                    <td>5 min ago</td>
+                    <td>
+                      <button class="btn btn-sm btn-danger" data-testid="action-deactivate-user-u002" onclick="showToast('success','User deactivated')">Deactivate</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mike Chen</strong></td>
+                    <td>mike.chen@company.com</td>
+                    <td><span class="badge badge--pending" style="text-transform:none;">Editor</span></td>
+                    <td><span style="color:var(--success);">● Active</span></td>
+                    <td>1 hour ago</td>
+                    <td>
+                      <button class="btn btn-sm btn-danger" data-testid="action-deactivate-user-u003" onclick="showToast('success','User deactivated')">Deactivate</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Emily Park</strong></td>
+                    <td>emily.park@company.com</td>
+                    <td><span class="badge badge--pending" style="text-transform:none;">Editor</span></td>
+                    <td><span style="color:var(--success);">● Active</span></td>
+                    <td>2 hours ago</td>
+                    <td>
+                      <button class="btn btn-sm btn-danger" data-testid="action-deactivate-user-u004" onclick="showToast('success','User deactivated')">Deactivate</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Alex Kim</strong></td>
+                    <td>alex.kim@company.com</td>
+                    <td><span class="badge badge--draft" style="text-transform:none;">Viewer</span></td>
+                    <td><span style="color:var(--text-muted);">● Inactive</span></td>
+                    <td>3 days ago</td>
+                    <td>
+                      <button class="btn btn-sm btn-success" onclick="showToast('success','User reactivated')">Reactivate</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lisa Wong</strong></td>
+                    <td>lisa.wong@company.com</td>
+                    <td><span class="badge badge--locked" style="text-transform:none;">Reviewer</span></td>
+                    <td><span style="color:var(--success);">● Active</span></td>
+                    <td>30 min ago</td>
+                    <td>
+                      <button class="btn btn-sm btn-danger" data-testid="action-deactivate-user-u006" onclick="showToast('success','User deactivated')">Deactivate</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Roles Tab -->
+          <div id="tab-roles" class="tab-content">
+            <h3 style="color:var(--text-white); margin-bottom:var(--space-lg);">Role Management</h3>
+
+            <div data-testid="admin-roles-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:var(--space-lg);">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Admin</h4>
+                  <button class="btn btn-sm btn-secondary" data-testid="btn-edit-role-admin">Edit</button>
+                </div>
+                <p style="color:var(--text-secondary); font-size:var(--font-size-sm); margin-bottom:var(--space-md);">Full access to all features, user management, and system settings.</p>
+                <div style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                  <div>✓ Create / Edit / Delete Records</div>
+                  <div>✓ Approve / Reject Records</div>
+                  <div>✓ Lock / Unlock Records</div>
+                  <div>✓ Manage Users & Roles</div>
+                  <div>✓ View & Export Reports</div>
+                  <div>✓ System Settings</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Reviewer</h4>
+                  <button class="btn btn-sm btn-secondary" data-testid="btn-edit-role-reviewer">Edit</button>
+                </div>
+                <p style="color:var(--text-secondary); font-size:var(--font-size-sm); margin-bottom:var(--space-md);">Can review and approve/reject records submitted for review.</p>
+                <div style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                  <div>✓ View Records</div>
+                  <div>✓ Approve / Reject Records</div>
+                  <div>✓ View Reports</div>
+                  <div>✕ Manage Users</div>
+                  <div>✕ Lock / Unlock Records</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Editor</h4>
+                  <button class="btn btn-sm btn-secondary" data-testid="btn-edit-role-editor">Edit</button>
+                </div>
+                <p style="color:var(--text-secondary); font-size:var(--font-size-sm); margin-bottom:var(--space-md);">Can create, edit, and submit records for review.</p>
+                <div style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                  <div>✓ Create / Edit Records</div>
+                  <div>✓ Submit for Review</div>
+                  <div>✓ View Reports</div>
+                  <div>✕ Approve / Reject</div>
+                  <div>✕ Delete Records</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Viewer</h4>
+                  <button class="btn btn-sm btn-secondary" data-testid="btn-edit-role-viewer">Edit</button>
+                </div>
+                <p style="color:var(--text-secondary); font-size:var(--font-size-sm); margin-bottom:var(--space-md);">Read-only access to records and reports.</p>
+                <div style="font-size:var(--font-size-xs); color:var(--text-muted);">
+                  <div>✓ View Records</div>
+                  <div>✓ View Reports</div>
+                  <div>✕ Create / Edit Records</div>
+                  <div>✕ Approve / Reject</div>
+                  <div>✕ Manage anything</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Invite User Modal -->
+  <div id="modal-invite" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Invite User</h3>
+        <button class="modal-close" onclick="closeModal('modal-invite')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="user@company.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select class="form-select">
+            <option>Viewer</option>
+            <option>Editor</option>
+            <option>Reviewer</option>
+            <option>Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-invite')">Cancel</button>
+        <button class="btn btn-primary" onclick="closeModal('modal-invite');showToast('success','Invitation sent!')">Send Invitation</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

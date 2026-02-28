@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Record Detail — Records Management System">
+  <title>Record Detail — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-brand"><div class="brand-icon">📋</div><span>Records Manager</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-item" data-testid="nav-item-dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></a>
+        <a href="records.html" class="nav-item" data-testid="nav-item-records"><span class="nav-icon">📁</span><span class="nav-label">Records</span></a>
+        <a href="reports.html" class="nav-item" data-testid="nav-item-reports"><span class="nav-icon">📈</span><span class="nav-label">Reports</span></a>
+        <div class="nav-section-title">Account</div>
+        <a href="settings.html" class="nav-item" data-testid="nav-item-settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></a>
+        <a href="admin.html" class="nav-item" data-testid="nav-item-admin"><span class="nav-icon">🛡</span><span class="nav-label">Admin Panel</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-wrapper">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="btn-sidebar-toggle" data-testid="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+          <nav class="breadcrumb" data-testid="breadcrumb">
+            <a href="dashboard.html">Home</a><span class="separator">/</span>
+            <a href="records.html">Records</a><span class="separator">/</span>
+            <span class="current">Q4 Financial Review</span>
+          </nav>
+        </div>
+        <div class="header-right">
+          <div class="notifications-wrapper">
+            <button class="btn btn-icon" data-testid="btn-notifications" onclick="toggleNotifications()">🔔<span class="notification-badge" data-testid="notification-unread-count">3</span></button>
+            <div id="notifications-panel" class="notifications-panel" data-testid="notifications-panel">
+              <div class="notifications-header"><span style="font-weight:600;color:var(--text-white);">Notifications</span><button class="btn btn-sm btn-secondary" data-testid="btn-mark-all-read" onclick="markAllRead()">Mark all read</button></div>
+              <div class="notification-item unread"><span class="notification-dot"></span><div class="notification-content"><div class="notification-text">Record #1042 was approved</div><div class="notification-time">2 min ago</div></div></div>
+            </div>
+          </div>
+          <div class="user-menu-wrapper">
+            <button class="user-avatar" data-testid="user-avatar-menu" onclick="toggleUserMenu()">JD</button>
+            <div id="user-dropdown" class="user-dropdown">
+              <div class="user-dropdown-header"><div class="user-dropdown-name" data-testid="user-display-name">John Doe</div><div class="user-dropdown-role"><span data-testid="user-role-badge" class="badge badge--approved" style="padding:2px 8px;font-size:10px;">Admin</span></div></div>
+              <a href="settings.html" class="user-dropdown-item">⚙ Settings</a>
+              <a href="login.html" class="user-dropdown-item danger" data-testid="menu-item-logout">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main -->
+      <main class="main-content" data-testid="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div style="display:flex; align-items:center; gap:var(--space-md); margin-bottom:var(--space-sm);">
+              <h1>Q4 Financial Review</h1>
+              <span id="status-badge" data-testid="status-badge" class="badge badge--draft" role="status">Draft</span>
+              <span id="record-lock-icon" data-testid="record-lock-icon" class="hidden">🔒</span>
+            </div>
+            <p style="color:var(--text-secondary); font-size:var(--font-size-sm);">Record #1042 • Created by John Doe on Feb 25, 2026</p>
+          </div>
+          <div class="page-header-actions" style="gap:var(--space-sm);">
+            <!-- Workflow Buttons -->
+            <button class="btn btn-primary" data-testid="btn-submit-for-review" onclick="openModal('modal-submit-review')">📤 Submit for Review</button>
+            <button class="btn btn-success" data-testid="btn-approve" onclick="openModal('modal-approve')">✓ Approve</button>
+            <button class="btn btn-danger" data-testid="btn-reject" onclick="openModal('modal-reject')">✕ Reject</button>
+            <a href="record-form.html" class="btn btn-secondary" data-testid="btn-edit-record">✏ Edit</a>
+
+            <!-- Actions Menu -->
+            <div class="actions-menu-wrapper">
+              <button class="btn btn-secondary" data-testid="btn-actions-menu" onclick="toggleActionsMenu()">Actions ▾</button>
+              <div id="actions-dropdown" class="actions-dropdown">
+                <div class="actions-dropdown-item" data-testid="action-lock-record" onclick="openModal('modal-lock')">🔒 Lock Record</div>
+                <div class="actions-dropdown-item" data-testid="action-unlock-record" onclick="openModal('modal-unlock')">🔓 Unlock Record</div>
+                <div class="actions-dropdown-item" data-testid="action-archive" onclick="archiveRecord()">📦 Archive</div>
+                <div class="actions-dropdown-item danger" data-testid="action-delete-record" onclick="openModal('modal-confirm-delete')">🗑 Delete</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Grid -->
+        <div class="detail-grid">
+          <!-- Left: Record Summary -->
+          <div class="detail-main">
+            <div class="card" data-testid="record-summary">
+              <div class="card-header">
+                <h3 class="card-title">Record Details</h3>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-lg);">
+                <div class="detail-field">
+                  <div class="detail-field-label">Title</div>
+                  <div class="detail-field-value">Q4 Financial Review</div>
+                </div>
+                <div class="detail-field">
+                  <div class="detail-field-label">Type</div>
+                  <div class="detail-field-value">Compliance</div>
+                </div>
+                <div class="detail-field">
+                  <div class="detail-field-label">Priority</div>
+                  <div class="detail-field-value"><span style="color:var(--danger);">● High</span></div>
+                </div>
+                <div class="detail-field">
+                  <div class="detail-field-label">Assignee</div>
+                  <div class="detail-field-value">Sarah Connor</div>
+                </div>
+                <div class="detail-field">
+                  <div class="detail-field-label">Due Date</div>
+                  <div class="detail-field-value">March 15, 2026</div>
+                </div>
+                <div class="detail-field">
+                  <div class="detail-field-label">Created</div>
+                  <div class="detail-field-value">February 25, 2026</div>
+                </div>
+              </div>
+              <div class="detail-field" style="margin-top:var(--space-md);">
+                <div class="detail-field-label">Description</div>
+                <div class="detail-field-value" style="line-height:1.7;">
+                  Comprehensive financial review for Q4 2025 covering revenue analysis, expense tracking, budget variance reports, and compliance documentation for regulatory filing. All department heads must submit their quarterly reports by March 1, 2026.
+                </div>
+              </div>
+              <div class="detail-field" style="margin-top:var(--space-md);">
+                <div class="detail-field-label">Attachments</div>
+                <div class="detail-field-value">
+                  <div style="display:flex; gap:var(--space-sm); flex-wrap:wrap;">
+                    <span class="filter-tag">📄 Q4_Revenue_Report.xlsx <span class="remove-tag">↓</span></span>
+                    <span class="filter-tag">📄 Budget_Variance.pdf <span class="remove-tag">↓</span></span>
+                    <span class="filter-tag">📄 Compliance_Checklist.docx <span class="remove-tag">↓</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Activity Log -->
+          <div class="detail-sidebar">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Activity Log</h3>
+              </div>
+              <div class="activity-log" data-testid="activity-log">
+                <div class="log-entry">
+                  <span class="log-dot created"></span>
+                  <div>
+                    <div class="log-text"><strong>John Doe</strong> created this record</div>
+                    <div class="log-meta">Feb 25, 2026 • 9:30 AM</div>
+                  </div>
+                </div>
+                <div class="log-entry">
+                  <span class="log-dot created"></span>
+                  <div>
+                    <div class="log-text"><strong>John Doe</strong> updated the description</div>
+                    <div class="log-meta">Feb 25, 2026 • 10:15 AM</div>
+                  </div>
+                </div>
+                <div class="log-entry">
+                  <span class="log-dot created"></span>
+                  <div>
+                    <div class="log-text"><strong>John Doe</strong> attached 3 files</div>
+                    <div class="log-meta">Feb 26, 2026 • 2:00 PM</div>
+                  </div>
+                </div>
+                <div class="log-entry">
+                  <span class="log-dot submitted"></span>
+                  <div>
+                    <div class="log-text"><strong>John Doe</strong> assigned to <strong>Sarah Connor</strong></div>
+                    <div class="log-meta">Feb 27, 2026 • 8:45 AM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  MODALS                                                       -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+
+  <!-- Submit for Review Modal -->
+  <div id="modal-submit-review" class="modal-overlay" data-testid="modal-confirm">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Submit for Review</h3>
+        <button class="modal-close" data-testid="btn-close-modal" onclick="closeModal('modal-submit-review')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to submit this record for review?</p>
+        <div class="form-group" style="margin-top:var(--space-md);">
+          <label class="form-label">Comment (optional)</label>
+          <textarea class="form-textarea" data-testid="input-workflow-comment" placeholder="Add a comment for the reviewer…"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-testid="btn-cancel-modal" onclick="closeModal('modal-submit-review')">Cancel</button>
+        <button class="btn btn-primary" data-testid="btn-confirm-workflow" onclick="submitForReview()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approve Modal -->
+  <div id="modal-approve" class="modal-overlay" data-testid="modal-approve">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Approve Record</h3>
+        <button class="modal-close" onclick="closeModal('modal-approve')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Approve this record? This will change the status to "Approved".</p>
+        <div class="form-group" style="margin-top:var(--space-md);">
+          <label class="form-label">Approval Note (optional)</label>
+          <textarea class="form-textarea" data-testid="input-approval-note" placeholder="Add a note…"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-testid="btn-cancel-modal" onclick="closeModal('modal-approve')">Cancel</button>
+        <button class="btn btn-success" data-testid="btn-confirm-approval" onclick="approveRecord()">Approve</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reject Modal -->
+  <div id="modal-reject" class="modal-overlay" data-testid="modal-reject">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Reject Record</h3>
+        <button class="modal-close" onclick="closeModal('modal-reject')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Reject this record? Please provide a reason.</p>
+        <div class="form-group" style="margin-top:var(--space-md);">
+          <label class="form-label">Rejection Reason (required)</label>
+          <textarea class="form-textarea" data-testid="input-rejection-reason" placeholder="Describe why this record is being rejected…" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-testid="btn-cancel-modal" onclick="closeModal('modal-reject')">Cancel</button>
+        <button class="btn btn-danger" data-testid="btn-confirm-rejection" onclick="rejectRecord()">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lock Modal -->
+  <div id="modal-lock" class="modal-overlay" data-testid="modal-lock">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Lock Record</h3>
+        <button class="modal-close" onclick="closeModal('modal-lock')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Lock this record? Once locked, no further edits will be allowed until an admin unlocks it.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-testid="btn-cancel-modal" onclick="closeModal('modal-lock')">Cancel</button>
+        <button class="btn btn-primary" data-testid="btn-confirm-lock" onclick="lockRecord()">Lock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unlock Modal -->
+  <div id="modal-unlock" class="modal-overlay" data-testid="modal-unlock">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Unlock Record</h3>
+        <button class="modal-close" onclick="closeModal('modal-unlock')">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Unlock this record? This will restore it to "Approved" status and re-enable editing.</p>
+        <div class="form-group" style="margin-top:var(--space-md);">
+          <label class="form-label">Justification (required)</label>
+          <textarea class="form-textarea" data-testid="input-unlock-reason" placeholder="Explain why this record needs to be unlocked…" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-testid="btn-cancel-modal" onclick="closeModal('modal-unlock')">Cancel</button>
+        <button class="btn btn-primary" data-testid="btn-confirm-unlock" onclick="unlockRecord()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="modal-confirm-delete" class="modal-overlay" data-testid="modal-confirm-delete">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Record</h3>
+        <button class="modal-close" onclick="closeModal('modal-confirm-delete')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" style="margin-bottom:var(--space-md);">
+          <span class="alert-icon">⚠</span>
+          <span>This action cannot be undone. The record and all associated data will be permanently deleted.</span>
+        </div>
+        <p>Are you sure you want to delete "Q4 Financial Review"?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-testid="btn-cancel-modal" onclick="closeModal('modal-confirm-delete')">Cancel</button>
+        <button class="btn btn-danger" data-testid="btn-confirm-delete" onclick="deleteRecord()">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

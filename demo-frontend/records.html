@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Records List — Records Management System">
+  <title>Records — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-brand">
+        <div class="brand-icon">📋</div>
+        <span>Records Manager</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-item" data-testid="nav-item-dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></a>
+        <a href="records.html" class="nav-item" data-testid="nav-item-records"><span class="nav-icon">📁</span><span class="nav-label">Records</span></a>
+        <a href="reports.html" class="nav-item" data-testid="nav-item-reports"><span class="nav-icon">📈</span><span class="nav-label">Reports</span></a>
+        <div class="nav-section-title">Account</div>
+        <a href="settings.html" class="nav-item" data-testid="nav-item-settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></a>
+        <a href="admin.html" class="nav-item" data-testid="nav-item-admin"><span class="nav-icon">🛡</span><span class="nav-label">Admin Panel</span></a>
+      </nav>
+      <div class="sidebar-footer"><div class="sidebar-footer-info" style="font-size:var(--font-size-xs); color:var(--text-muted);">v2.4.1 • © 2026 RecMgr</div></div>
+    </aside>
+
+    <div class="main-wrapper">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="btn-sidebar-toggle" data-testid="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+          <nav class="breadcrumb" data-testid="breadcrumb">
+            <a href="dashboard.html">Home</a><span class="separator">/</span><span class="current">Records</span>
+          </nav>
+        </div>
+        <div class="header-right">
+          <div class="notifications-wrapper">
+            <button class="btn btn-icon" data-testid="btn-notifications" onclick="toggleNotifications()">🔔<span class="notification-badge" data-testid="notification-unread-count">3</span></button>
+            <div id="notifications-panel" class="notifications-panel" data-testid="notifications-panel">
+              <div class="notifications-header"><span style="font-weight:600;color:var(--text-white);">Notifications</span><button class="btn btn-sm btn-secondary" data-testid="btn-mark-all-read" onclick="markAllRead()">Mark all read</button></div>
+              <div class="notification-item unread"><span class="notification-dot"></span><div class="notification-content"><div class="notification-text">Record #1042 was approved</div><div class="notification-time">2 min ago</div></div></div>
+            </div>
+          </div>
+          <div class="user-menu-wrapper">
+            <button class="user-avatar" data-testid="user-avatar-menu" onclick="toggleUserMenu()">JD</button>
+            <div id="user-dropdown" class="user-dropdown">
+              <div class="user-dropdown-header"><div class="user-dropdown-name" data-testid="user-display-name">John Doe</div><div class="user-dropdown-role"><span data-testid="user-role-badge" class="badge badge--approved" style="padding:2px 8px;font-size:10px;">Admin</span></div></div>
+              <a href="settings.html" class="user-dropdown-item">⚙ Settings</a>
+              <a href="login.html" class="user-dropdown-item danger" data-testid="menu-item-logout">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content" data-testid="main-content">
+        <div class="page-header">
+          <h1>Records</h1>
+          <div class="page-header-actions">
+            <a href="record-form.html" class="btn btn-primary" data-testid="btn-create-record">+ New Record</a>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <div class="search-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="form-input" data-testid="search-input" placeholder="Search records…" oninput="handleSearch(event)" id="search-input">
+            </div>
+            <button class="btn btn-secondary" data-testid="btn-filter" onclick="toggleFilters()">🔽 Filter</button>
+          </div>
+          <div class="toolbar-right">
+            <div class="active-filter-tags" id="active-filter-tags" data-testid="active-filter-tags">
+              <span class="filter-tag">Status: Pending <span class="remove-tag" onclick="this.parentElement.remove()">×</span></span>
+            </div>
+            <button class="btn btn-sm btn-secondary" data-testid="btn-clear-filters" onclick="clearFilters()">Clear Filters</button>
+          </div>
+        </div>
+
+        <!-- Filter Panel -->
+        <div id="filter-panel" class="filter-panel" data-testid="filter-panel">
+          <div class="filter-grid">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Status</label>
+              <select class="form-select" data-testid="filter-status">
+                <option value="">All Statuses</option>
+                <option value="draft">Draft</option>
+                <option value="pending">Pending Review</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="locked">Locked</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Type</label>
+              <select class="form-select" data-testid="filter-type">
+                <option value="">All Types</option>
+                <option value="compliance">Compliance</option>
+                <option value="infrastructure">Infrastructure</option>
+                <option value="hr">HR Document</option>
+                <option value="policy">Policy</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">From Date</label>
+              <input type="date" class="form-input" data-testid="filter-date-from">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">To Date</label>
+              <input type="date" class="form-input" data-testid="filter-date-to">
+            </div>
+          </div>
+          <div style="display:flex; gap:var(--space-md); margin-top:var(--space-md);">
+            <button class="btn btn-primary btn-sm" data-testid="btn-apply-filters" onclick="applyFilters()">Apply</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleFilters()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Show Archived Toggle -->
+        <div style="margin-bottom:var(--space-md);">
+          <label style="display:flex; align-items:center; gap:var(--space-sm); cursor:pointer; font-size:var(--font-size-sm); color:var(--text-secondary);">
+            <input type="checkbox" data-testid="toggle-show-archived" style="accent-color:var(--accent-primary);">
+            Show archived records
+          </label>
+        </div>
+
+        <!-- Records Table -->
+        <div class="table-container" data-testid="records-table">
+          <table>
+            <thead>
+              <tr>
+                <th data-testid="th-sort-title">Title <span class="sort-icon sort--asc"></span></th>
+                <th data-testid="th-sort-type">Type <span class="sort-icon"></span></th>
+                <th data-testid="th-sort-status">Status <span class="sort-icon"></span></th>
+                <th data-testid="th-sort-assignee">Assignee <span class="sort-icon"></span></th>
+                <th data-testid="th-sort-priority">Priority <span class="sort-icon"></span></th>
+                <th data-testid="th-sort-dueDate">Due Date <span class="sort-icon"></span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
+                <td><strong>Q4 Financial Review</strong></td>
+                <td>Compliance</td>
+                <td><span class="badge badge--pending">Pending Review</span></td>
+                <td>Sarah Connor</td>
+                <td><span style="color:var(--danger);">● High</span></td>
+                <td>Mar 15, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-icon btn-sm" data-testid="btn-view-record" title="View" onclick="event.stopPropagation();window.location.href='record-detail.html'">👁</button>
+                    <button class="btn btn-icon btn-sm" data-testid="btn-edit-record" title="Edit" onclick="event.stopPropagation();window.location.href='record-form.html'">✏</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
+                <td><strong>Server Migration Plan</strong></td>
+                <td>Infrastructure</td>
+                <td><span class="badge badge--approved">Approved</span></td>
+                <td>Mike Chen</td>
+                <td><span style="color:var(--warning);">● Medium</span></td>
+                <td>Mar 22, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-icon btn-sm" data-testid="btn-view-record" title="View" onclick="event.stopPropagation()">👁</button>
+                    <button class="btn btn-icon btn-sm" data-testid="btn-edit-record" title="Edit" onclick="event.stopPropagation()">✏</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
+                <td><strong>Employee Onboarding SOP</strong></td>
+                <td>HR Document</td>
+                <td><span class="badge badge--draft">Draft</span></td>
+                <td>Emily Park</td>
+                <td><span style="color:var(--text-muted);">● Low</span></td>
+                <td>Apr 01, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-icon btn-sm" data-testid="btn-view-record" title="View" onclick="event.stopPropagation()">👁</button>
+                    <button class="btn btn-icon btn-sm" data-testid="btn-edit-record" title="Edit" onclick="event.stopPropagation()">✏</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
+                <td><strong>Data Retention Policy</strong></td>
+                <td>Policy</td>
+                <td><span class="badge badge--locked">🔒 Locked</span></td>
+                <td>John Doe</td>
+                <td><span style="color:var(--danger);">● Critical</span></td>
+                <td>Feb 28, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-icon btn-sm" data-testid="btn-view-record" title="View" onclick="event.stopPropagation()">👁</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
+                <td><strong>Vendor Risk Assessment</strong></td>
+                <td>Compliance</td>
+                <td><span class="badge badge--rejected">Rejected</span></td>
+                <td>Alex Kim</td>
+                <td><span style="color:var(--warning);">● Medium</span></td>
+                <td>Mar 10, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-icon btn-sm" data-testid="btn-view-record" title="View" onclick="event.stopPropagation()">👁</button>
+                    <button class="btn btn-icon btn-sm" data-testid="btn-edit-record" title="Edit" onclick="event.stopPropagation()">✏</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
+                <td><strong>Annual Security Audit</strong></td>
+                <td>Compliance</td>
+                <td><span class="badge badge--approved">Approved</span></td>
+                <td>Lisa Wong</td>
+                <td><span style="color:var(--danger);">● High</span></td>
+                <td>Mar 05, 2026</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn btn-icon btn-sm" data-testid="btn-view-record" title="View" onclick="event.stopPropagation()">👁</button>
+                    <button class="btn btn-icon btn-sm" data-testid="btn-edit-record" title="Edit" onclick="event.stopPropagation()">✏</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="pagination-controls" data-testid="pagination-controls">
+            <span>Showing 1-6 of 42 records</span>
+            <div style="display:flex;align-items:center;gap:var(--space-md);">
+              <select class="form-select" data-testid="select-page-size" style="width:auto;padding:6px 32px 6px 10px;">
+                <option>10 / page</option>
+                <option>25 / page</option>
+                <option>50 / page</option>
+              </select>
+              <div class="pagination-pages">
+                <button class="page-btn" data-testid="btn-page-prev" disabled>←</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn" data-testid="btn-page-next">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state-records" data-testid="empty-state-records" class="empty-state" style="display:none;">
+          <div class="empty-state-icon">📭</div>
+          <h3>No records found</h3>
+          <p>Try adjusting your search or filter criteria.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

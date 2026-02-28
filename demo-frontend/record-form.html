@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="New Record — Records Management System">
+  <title>New Record — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-brand"><div class="brand-icon">📋</div><span>Records Manager</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-item" data-testid="nav-item-dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></a>
+        <a href="records.html" class="nav-item" data-testid="nav-item-records"><span class="nav-icon">📁</span><span class="nav-label">Records</span></a>
+        <a href="reports.html" class="nav-item" data-testid="nav-item-reports"><span class="nav-icon">📈</span><span class="nav-label">Reports</span></a>
+        <div class="nav-section-title">Account</div>
+        <a href="settings.html" class="nav-item" data-testid="nav-item-settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></a>
+        <a href="admin.html" class="nav-item" data-testid="nav-item-admin"><span class="nav-icon">🛡</span><span class="nav-label">Admin Panel</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="header">
+        <div class="header-left">
+          <button class="btn-sidebar-toggle" data-testid="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+          <nav class="breadcrumb" data-testid="breadcrumb">
+            <a href="dashboard.html">Home</a><span class="separator">/</span>
+            <a href="records.html">Records</a><span class="separator">/</span>
+            <span class="current">New Record</span>
+          </nav>
+        </div>
+        <div class="header-right">
+          <div class="notifications-wrapper">
+            <button class="btn btn-icon" data-testid="btn-notifications" onclick="toggleNotifications()">🔔<span class="notification-badge" data-testid="notification-unread-count">3</span></button>
+            <div id="notifications-panel" class="notifications-panel" data-testid="notifications-panel"><div class="notifications-header"><span style="font-weight:600;color:var(--text-white);">Notifications</span></div></div>
+          </div>
+          <div class="user-menu-wrapper">
+            <button class="user-avatar" data-testid="user-avatar-menu" onclick="toggleUserMenu()">JD</button>
+            <div id="user-dropdown" class="user-dropdown">
+              <div class="user-dropdown-header"><div class="user-dropdown-name" data-testid="user-display-name">John Doe</div></div>
+              <a href="settings.html" class="user-dropdown-item">⚙ Settings</a>
+              <a href="login.html" class="user-dropdown-item danger" data-testid="menu-item-logout">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content" data-testid="main-content">
+        <div class="page-header">
+          <h1>New Record</h1>
+        </div>
+
+        <!-- Form Error Summary -->
+        <div id="form-error-summary" data-testid="form-error-summary" class="form-error-summary">
+          Please fix the highlighted errors before submitting.
+        </div>
+
+        <div class="card">
+          <form onsubmit="validateRecordForm(event)">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-lg);">
+              <!-- Title -->
+              <div class="form-group">
+                <label class="form-label" for="input-record-title">Title *</label>
+                <input type="text" id="input-record-title" data-testid="input-record-title" class="form-input" placeholder="Enter record title">
+                <div id="field-error-title" data-testid="field-error-title" class="form-error">Title is required.</div>
+              </div>
+
+              <!-- Type -->
+              <div class="form-group">
+                <label class="form-label" for="select-record-type">Type *</label>
+                <select id="select-record-type" data-testid="select-record-type" class="form-select">
+                  <option value="">Select type…</option>
+                  <option value="compliance">Compliance</option>
+                  <option value="infrastructure">Infrastructure</option>
+                  <option value="hr">HR Document</option>
+                  <option value="policy">Policy</option>
+                  <option value="technical">Technical</option>
+                </select>
+                <div data-testid="field-error-type" class="form-error">Type is required.</div>
+              </div>
+
+              <!-- Assignee -->
+              <div class="form-group">
+                <label class="form-label" for="select-record-assignee">Assignee</label>
+                <select id="select-record-assignee" data-testid="select-record-assignee" class="form-select">
+                  <option value="">Select assignee…</option>
+                  <option value="sarah">Sarah Connor</option>
+                  <option value="mike">Mike Chen</option>
+                  <option value="emily">Emily Park</option>
+                  <option value="alex">Alex Kim</option>
+                  <option value="lisa">Lisa Wong</option>
+                </select>
+              </div>
+
+              <!-- Priority -->
+              <div class="form-group">
+                <label class="form-label" for="select-record-priority">Priority</label>
+                <select id="select-record-priority" data-testid="select-record-priority" class="form-select">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+
+              <!-- Due Date -->
+              <div class="form-group">
+                <label class="form-label" for="datepicker-record-due-date">Due Date</label>
+                <input type="date" id="datepicker-record-due-date" data-testid="datepicker-record-due-date" class="form-input">
+              </div>
+
+              <!-- Attachments -->
+              <div class="form-group">
+                <label class="form-label" for="input-record-attachments">Attachments</label>
+                <input type="file" id="input-record-attachments" data-testid="input-record-attachments" class="form-input" multiple style="padding:8px;">
+              </div>
+            </div>
+
+            <!-- Description (full width) -->
+            <div class="form-group">
+              <label class="form-label" for="textarea-record-description">Description</label>
+              <textarea id="textarea-record-description" data-testid="textarea-record-description" class="form-textarea" placeholder="Describe the record…" rows="6"></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div style="display:flex; gap:var(--space-md); justify-content:flex-end;">
+              <a href="records.html" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary" data-testid="btn-submit-record">Submit</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

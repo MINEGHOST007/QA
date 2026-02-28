@@ -3,9 +3,9 @@ Test Record Locking — Selenium regression test for the record lock/unlock work
 
 Covers:
   - Lock an approved record
-  - Verify locked status badge
+  - Verify locked status badge and lock icon
   - Verify edit button disabled when locked
-  - Unlock a locked record
+  - Unlock a locked record with justification
   - Permission check: non-admin cannot lock
 """
 
@@ -17,29 +17,33 @@ from selenium.webdriver.support import expected_conditions as EC # type: ignore
 
 
 class TestRecordLocking(unittest.TestCase):
-    """Regression tests for record lock/unlock at /records/{id}."""
+    """Regression tests for record lock/unlock on record detail page."""
 
-    BASE_URL = "https://app.example.com"
-    RECORDS_LIST_URL = f"{BASE_URL}/records"
+    BASE_URL = "http://localhost:8080"
+    RECORD_DETAIL_URL = f"{BASE_URL}/record-detail.html"
+    RECORDS_URL = f"{BASE_URL}/records.html"
 
-    # --- XPaths and Selectors ---
-    RECORD_ROW = "//tr[@data-testid='record-row-{id}']"
-    RECORD_LINK = "//tr[@data-testid='record-row-{id}']//a[@data-testid='record-link']"
-    STATUS_BADGE = "//span[@data-testid='record-status-badge']"
-    LOCK_BUTTON = "//button[@data-testid='btn-lock-record']"
-    UNLOCK_BUTTON = "//button[@data-testid='btn-unlock-record']"
-    EDIT_BUTTON = "//button[@data-testid='btn-edit-record']"
-    ACTIONS_MENU = "//button[@data-testid='actions-menu-trigger']"
-    ACTIONS_DROPDOWN = "//div[@data-testid='actions-dropdown']"
-    CONFIRM_MODAL = "//div[@data-testid='confirm-modal']"
-    CONFIRM_YES_BUTTON = "//button[@data-testid='confirm-yes-btn']"
-    CONFIRM_NO_BUTTON = "//button[@data-testid='confirm-no-btn']"
+    # --- XPaths and Selectors (v1.2 — last updated Dec 2025) ---
+    STATUS_BADGE = "//span[@data-testid='status-badge']"
+    LOCK_ICON = "//span[@data-testid='record-lock-icon']"
+    ACTIONS_MENU = "//button[@data-testid='btn-actions-menu']"
+    ACTIONS_DROPDOWN = "//div[@id='actions-dropdown']"
+    LOCK_RECORD_BTN = "//div[@data-testid='action-lock-record']"
+    UNLOCK_RECORD_BTN = "//div[@data-testid='action-unlock-record']"
+    EDIT_BUTTON = "//a[@data-testid='btn-edit-record']"
+
+    # Lock modal
+    LOCK_MODAL = "//div[@data-testid='modal-lock']"
+    CONFIRM_LOCK_BTN = "//button[@data-testid='btn-confirm-lock']"
+
+    # Unlock modal — old version had different selector
+    UNLOCK_MODAL = "//div[@data-testid='modal-unlock']"
+    UNLOCK_REASON_INPUT = "//textarea[@data-testid='input-unlock-justification']"
+    CONFIRM_UNLOCK_BTN = "//button[@data-testid='btn-confirm-unlock']"
+
+    CANCEL_MODAL_BTN = "//button[@data-testid='btn-cancel-modal']"
     TOAST_SUCCESS = "//div[@data-testid='toast-success']"
-    TOAST_ERROR = "//div[@data-testid='toast-error']"
     BREADCRUMB = "//nav[@data-testid='breadcrumb']"
-
-    # Test data
-    APPROVED_RECORD_ID = "REC-001"
 
     def setUp(self):
         """Set up browser and login as admin."""
@@ -55,40 +59,31 @@ class TestRecordLocking(unittest.TestCase):
 
     def _login_as_admin(self):
         """Helper: log in as admin user."""
-        self.driver.get(f"{self.BASE_URL}/auth/login")
-        self.driver.find_element(By.XPATH, "//input[@data-testid='login-username']").send_keys("admin@example.com")
-        self.driver.find_element(By.XPATH, "//input[@data-testid='login-password']").send_keys("AdminPass123!")
-        self.driver.find_element(By.XPATH, "//button[@data-testid='login-submit-btn']").click()
-        self.wait.until(EC.url_contains("/dashboard"))
-
-    def _navigate_to_record(self, record_id: str):
-        """Helper: navigate to a specific record's detail page."""
-        self.driver.get(self.RECORDS_LIST_URL)
-        record_link = self.wait.until(
-            EC.element_to_be_clickable((By.XPATH, self.RECORD_LINK.format(id=record_id)))
-        )
-        record_link.click()
-        self.wait.until(EC.presence_of_element_located((By.XPATH, self.STATUS_BADGE)))
+        self.driver.get(f"{self.BASE_URL}/login.html")
+        self.driver.find_element(By.XPATH, "//input[@data-testid='input-username']").send_keys("admin")
+        self.driver.find_element(By.XPATH, "//input[@data-testid='input-password']").send_keys("admin123")
+        self.driver.find_element(By.XPATH, "//button[@data-testid='btn-login']").click()
+        self.wait.until(EC.url_contains("dashboard"))
 
     def test_lock_approved_record(self):
         """Test locking an approved record changes its status to Locked.
 
         Pre-conditions:
         - User is logged in as admin
-        - Record REC-001 exists with status 'Approved'
+        - Record is in 'Approved' status
 
         Steps:
-        1. Navigate to records list
-        2. Click on record REC-001
-        3. Verify status badge shows 'Approved'
-        4. Click Actions menu
-        5. Click Lock Record button
-        6. Confirm in the confirmation modal
-        7. Verify success toast appears
-        8. Verify status badge changes to 'Locked'
+        1. Navigate to record detail page
+        2. Verify status badge shows 'Approved'
+        3. Click Actions menu
+        4. Click Lock Record option
+        5. Confirm in the lock modal
+        6. Verify success toast appears
+        7. Verify status badge changes to 'Locked'
+        8. Verify lock icon appears
         9. Verify the edit button is now disabled
         """
-        self._navigate_to_record(self.APPROVED_RECORD_ID)
+        self.driver.get(self.RECORD_DETAIL_URL)
 
         # Verify initial status
         status = self.driver.find_element(By.XPATH, self.STATUS_BADGE)
@@ -98,12 +93,12 @@ class TestRecordLocking(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.ACTIONS_MENU).click()
         self.wait.until(EC.visibility_of_element_located((By.XPATH, self.ACTIONS_DROPDOWN)))
 
-        lock_btn = self.driver.find_element(By.XPATH, self.LOCK_BUTTON)
+        lock_btn = self.driver.find_element(By.XPATH, self.LOCK_RECORD_BTN)
         lock_btn.click()
 
         # Confirm modal
-        self.wait.until(EC.visibility_of_element_located((By.XPATH, self.CONFIRM_MODAL)))
-        self.driver.find_element(By.XPATH, self.CONFIRM_YES_BUTTON).click()
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, self.LOCK_MODAL)))
+        self.driver.find_element(By.XPATH, self.CONFIRM_LOCK_BTN).click()
 
         # Verify success
         toast = self.wait.until(EC.visibility_of_element_located((By.XPATH, self.TOAST_SUCCESS)))
@@ -111,8 +106,10 @@ class TestRecordLocking(unittest.TestCase):
 
         # Verify status changed
         self.wait.until(EC.text_to_be_present_in_element((By.XPATH, self.STATUS_BADGE), "Locked"))
-        status = self.driver.find_element(By.XPATH, self.STATUS_BADGE)
-        self.assertEqual(status.text.strip(), "Locked")
+
+        # Verify lock icon visible
+        lock_icon = self.driver.find_element(By.XPATH, self.LOCK_ICON)
+        self.assertTrue(lock_icon.is_displayed())
 
         # Verify edit button is disabled
         edit_btn = self.driver.find_element(By.XPATH, self.EDIT_BUTTON)
@@ -125,21 +122,28 @@ class TestRecordLocking(unittest.TestCase):
         1. Navigate to a locked record
         2. Click Actions menu
         3. Click Unlock Record
-        4. Confirm in modal
-        5. Verify status changes to 'Approved'
-        6. Verify edit button is enabled again
+        4. Enter justification reason (required)
+        5. Confirm in modal
+        6. Verify status changes to 'Approved'
+        7. Verify lock icon disappears
+        8. Verify edit button is enabled again
         """
-        self._navigate_to_record(self.APPROVED_RECORD_ID)
+        self.driver.get(self.RECORD_DETAIL_URL)
 
         # Open actions and unlock
         self.driver.find_element(By.XPATH, self.ACTIONS_MENU).click()
         self.wait.until(EC.visibility_of_element_located((By.XPATH, self.ACTIONS_DROPDOWN)))
 
-        unlock_btn = self.driver.find_element(By.XPATH, self.UNLOCK_BUTTON)
+        unlock_btn = self.driver.find_element(By.XPATH, self.UNLOCK_RECORD_BTN)
         unlock_btn.click()
 
-        self.wait.until(EC.visibility_of_element_located((By.XPATH, self.CONFIRM_MODAL)))
-        self.driver.find_element(By.XPATH, self.CONFIRM_YES_BUTTON).click()
+        self.wait.until(EC.visibility_of_element_located((By.XPATH, self.UNLOCK_MODAL)))
+
+        # Enter justification
+        reason_field = self.driver.find_element(By.XPATH, self.UNLOCK_REASON_INPUT)
+        reason_field.send_keys("Correction needed in Section 3 — unlocking for edit.")
+
+        self.driver.find_element(By.XPATH, self.CONFIRM_UNLOCK_BTN).click()
 
         toast = self.wait.until(EC.visibility_of_element_located((By.XPATH, self.TOAST_SUCCESS)))
         self.assertIn("unlocked", toast.text.lower())
@@ -154,23 +158,23 @@ class TestRecordLocking(unittest.TestCase):
 
         Steps:
         1. Login as regular user (not admin)
-        2. Navigate to an approved record
+        2. Navigate to record detail
         3. Open Actions menu
-        4. Verify Lock Record button is NOT present
+        4. Verify Lock Record option is NOT present
         """
         # Re-login as regular user
-        self.driver.get(f"{self.BASE_URL}/auth/login")
-        self.driver.find_element(By.XPATH, "//input[@data-testid='login-username']").send_keys("user@example.com")
-        self.driver.find_element(By.XPATH, "//input[@data-testid='login-password']").send_keys("UserPass123!")
-        self.driver.find_element(By.XPATH, "//button[@data-testid='login-submit-btn']").click()
-        self.wait.until(EC.url_contains("/dashboard"))
+        self.driver.get(f"{self.BASE_URL}/login.html")
+        self.driver.find_element(By.XPATH, "//input[@data-testid='input-username']").send_keys("editor")
+        self.driver.find_element(By.XPATH, "//input[@data-testid='input-password']").send_keys("editor123")
+        self.driver.find_element(By.XPATH, "//button[@data-testid='btn-login']").click()
+        self.wait.until(EC.url_contains("dashboard"))
 
-        self._navigate_to_record(self.APPROVED_RECORD_ID)
+        self.driver.get(self.RECORD_DETAIL_URL)
 
         self.driver.find_element(By.XPATH, self.ACTIONS_MENU).click()
         self.wait.until(EC.visibility_of_element_located((By.XPATH, self.ACTIONS_DROPDOWN)))
 
-        lock_buttons = self.driver.find_elements(By.XPATH, self.LOCK_BUTTON)
+        lock_buttons = self.driver.find_elements(By.XPATH, self.LOCK_RECORD_BTN)
         self.assertEqual(len(lock_buttons), 0, "Lock button should not be visible for regular users")
 
 

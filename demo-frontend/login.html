@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in to the Records Management System">
+  <title>Sign In — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon">📋</div>
+      <h1>Records Manager</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <!-- Login Error Banner -->
+    <div id="alert-login-error" data-testid="alert-login-error" class="alert alert-error" style="display:none;">
+      <span class="alert-icon">⚠</span>
+      <span class="alert-text">Invalid username or password.</span>
+    </div>
+
+    <form onsubmit="validateLoginForm(event)">
+      <div class="form-group">
+        <label class="form-label" for="input-username">Username</label>
+        <div class="form-input-wrapper">
+          <span class="input-icon">👤</span>
+          <input
+            type="text"
+            id="input-username"
+            data-testid="input-username"
+            class="form-input"
+            placeholder="Enter your username"
+            autocomplete="username"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-password">Password</label>
+        <div class="form-input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input
+            type="password"
+            id="input-password"
+            data-testid="input-password"
+            class="form-input"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          >
+        </div>
+      </div>
+
+      <button type="submit" id="btn-login" data-testid="btn-login" class="btn btn-primary btn-lg" style="width:100%;">
+        Sign In
+      </button>
+
+      <div style="text-align:center; margin-top:var(--space-lg);">
+        <a href="forgot-password.html" id="link-forgot-password" data-testid="link-forgot-password">
+          Forgot your password?
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

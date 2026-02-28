@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reports — Records Management System">
+  <title>Reports — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-brand"><div class="brand-icon">📋</div><span>Records Manager</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-item" data-testid="nav-item-dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></a>
+        <a href="records.html" class="nav-item" data-testid="nav-item-records"><span class="nav-icon">📁</span><span class="nav-label">Records</span></a>
+        <a href="reports.html" class="nav-item" data-testid="nav-item-reports"><span class="nav-icon">📈</span><span class="nav-label">Reports</span></a>
+        <div class="nav-section-title">Account</div>
+        <a href="settings.html" class="nav-item" data-testid="nav-item-settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></a>
+        <a href="admin.html" class="nav-item" data-testid="nav-item-admin"><span class="nav-icon">🛡</span><span class="nav-label">Admin Panel</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="header">
+        <div class="header-left">
+          <button class="btn-sidebar-toggle" data-testid="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+          <nav class="breadcrumb" data-testid="breadcrumb">
+            <a href="dashboard.html">Home</a><span class="separator">/</span><span class="current">Reports</span>
+          </nav>
+        </div>
+        <div class="header-right">
+          <div class="notifications-wrapper">
+            <button class="btn btn-icon" data-testid="btn-notifications" onclick="toggleNotifications()">🔔<span class="notification-badge" data-testid="notification-unread-count">3</span></button>
+            <div id="notifications-panel" class="notifications-panel" data-testid="notifications-panel"><div class="notifications-header"><span style="font-weight:600;color:var(--text-white);">Notifications</span></div></div>
+          </div>
+          <div class="user-menu-wrapper">
+            <button class="user-avatar" data-testid="user-avatar-menu" onclick="toggleUserMenu()">JD</button>
+            <div id="user-dropdown" class="user-dropdown">
+              <div class="user-dropdown-header"><div class="user-dropdown-name" data-testid="user-display-name">John Doe</div></div>
+              <a href="settings.html" class="user-dropdown-item">⚙ Settings</a>
+              <a href="login.html" class="user-dropdown-item danger" data-testid="menu-item-logout">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content" data-testid="main-content">
+        <div class="page-header">
+          <h1>Reports</h1>
+        </div>
+
+        <!-- Report Cards List -->
+        <div class="report-cards" data-testid="reports-list">
+          <div class="card report-card" onclick="document.getElementById('report-detail-section').style.display='block'; window.scrollTo({top:document.getElementById('report-detail-section').offsetTop-100, behavior:'smooth'});">
+            <div class="report-card-icon">📊</div>
+            <h3>Monthly Compliance Summary</h3>
+            <p>Overview of compliance status across all records for the selected month.</p>
+            <div style="margin-top:var(--space-md); font-size:var(--font-size-xs); color:var(--text-muted);">Last run: Feb 28, 2026</div>
+          </div>
+          <div class="card report-card">
+            <div class="report-card-icon">📈</div>
+            <h3>Record Status Distribution</h3>
+            <p>Breakdown of records by status (Draft, Pending, Approved, Rejected, Locked).</p>
+            <div style="margin-top:var(--space-md); font-size:var(--font-size-xs); color:var(--text-muted);">Last run: Feb 25, 2026</div>
+          </div>
+          <div class="card report-card">
+            <div class="report-card-icon">⏱</div>
+            <h3>Average Review Time</h3>
+            <p>Measures the average time records spend in "Pending Review" status.</p>
+            <div style="margin-top:var(--space-md); font-size:var(--font-size-xs); color:var(--text-muted);">Last run: Feb 20, 2026</div>
+          </div>
+          <div class="card report-card">
+            <div class="report-card-icon">👥</div>
+            <h3>Assignee Workload</h3>
+            <p>Shows the number of records assigned to each team member by status.</p>
+            <div style="margin-top:var(--space-md); font-size:var(--font-size-xs); color:var(--text-muted);">Last run: Feb 18, 2026</div>
+          </div>
+          <div class="card report-card">
+            <div class="report-card-icon">📅</div>
+            <h3>Due Date Compliance</h3>
+            <p>Tracks records that are overdue, due soon, or completed on time.</p>
+            <div style="margin-top:var(--space-md); font-size:var(--font-size-xs); color:var(--text-muted);">Never run</div>
+          </div>
+          <div class="card report-card">
+            <div class="report-card-icon">🔒</div>
+            <h3>Locked Records Audit</h3>
+            <p>List of all locked records with lock date, locked-by, and justification.</p>
+            <div style="margin-top:var(--space-md); font-size:var(--font-size-xs); color:var(--text-muted);">Last run: Feb 15, 2026</div>
+          </div>
+        </div>
+
+        <!-- Report Detail Section -->
+        <div id="report-detail-section" style="display:none; margin-top:var(--space-xl);">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Monthly Compliance Summary</h3>
+              <div style="display:flex; gap:var(--space-sm);">
+                <!-- Export Dropdown -->
+                <div class="actions-menu-wrapper">
+                  <button class="btn btn-secondary btn-sm" data-testid="btn-export" onclick="this.nextElementSibling.classList.toggle('visible')">📥 Export</button>
+                  <div class="actions-dropdown" style="min-width:160px;">
+                    <div class="actions-dropdown-item" data-testid="export-csv" onclick="showToast('success','Downloading CSV…')">📄 Export as CSV</div>
+                    <div class="actions-dropdown-item" data-testid="export-pdf" onclick="showToast('success','Downloading PDF…')">📕 Export as PDF</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date Range -->
+            <div style="display:flex; gap:var(--space-md); align-items:flex-end; margin-bottom:var(--space-lg);">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">From</label>
+                <input type="date" class="form-input" data-testid="report-date-from" value="2026-02-01" style="width:auto;">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">To</label>
+                <input type="date" class="form-input" data-testid="report-date-to" value="2026-02-28" style="width:auto;">
+              </div>
+              <button class="btn btn-primary btn-sm" data-testid="btn-run-report" onclick="runReport()">▶ Run Report</button>
+            </div>
+
+            <!-- Loading -->
+            <div id="report-loading" data-testid="report-loading" class="loading-spinner" style="display:none; padding:var(--space-xl); justify-content:center;">
+              <div class="spinner"></div>
+              <span>Generating report…</span>
+            </div>
+
+            <!-- Results -->
+            <div id="report-results" data-testid="report-results" style="display:none;">
+              <div class="stats-grid" style="margin-bottom:var(--space-lg);">
+                <div class="card stat-card stat-green" style="padding:var(--space-md);">
+                  <div class="stat-label">Compliant</div>
+                  <div class="stat-value" style="font-size:var(--font-size-xl);">87%</div>
+                </div>
+                <div class="card stat-card stat-yellow" style="padding:var(--space-md);">
+                  <div class="stat-label">Pending</div>
+                  <div class="stat-value" style="font-size:var(--font-size-xl);">9%</div>
+                </div>
+                <div class="card stat-card stat-purple" style="padding:var(--space-md);">
+                  <div class="stat-label">Non-Compliant</div>
+                  <div class="stat-value" style="font-size:var(--font-size-xl);">4%</div>
+                </div>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Record</th>
+                      <th>Status</th>
+                      <th>Compliance</th>
+                      <th>Due Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Q4 Financial Review</td><td><span class="badge badge--pending">Pending</span></td><td><span style="color:var(--warning);">Pending Review</span></td><td>Mar 15, 2026</td></tr>
+                    <tr><td>Server Migration Plan</td><td><span class="badge badge--approved">Approved</span></td><td><span style="color:var(--success);">Compliant</span></td><td>Mar 22, 2026</td></tr>
+                    <tr><td>Data Retention Policy</td><td><span class="badge badge--locked">Locked</span></td><td><span style="color:var(--success);">Compliant</span></td><td>Feb 28, 2026</td></tr>
+                    <tr><td>Vendor Risk Assessment</td><td><span class="badge badge--rejected">Rejected</span></td><td><span style="color:var(--danger);">Non-Compliant</span></td><td>Mar 10, 2026</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Empty state for reports -->
+            <div data-testid="empty-state-reports" class="empty-state" id="report-empty" style="display:none;">
+              <div class="empty-state-icon">📭</div>
+              <h3>No report data</h3>
+              <p>Select a date range and click "Run Report" to generate results.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

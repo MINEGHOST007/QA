@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Settings — Records Management System">
+  <title>Settings — Records Management System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-brand"><div class="brand-icon">📋</div><span>Records Manager</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-item" data-testid="nav-item-dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></a>
+        <a href="records.html" class="nav-item" data-testid="nav-item-records"><span class="nav-icon">📁</span><span class="nav-label">Records</span></a>
+        <a href="reports.html" class="nav-item" data-testid="nav-item-reports"><span class="nav-icon">📈</span><span class="nav-label">Reports</span></a>
+        <div class="nav-section-title">Account</div>
+        <a href="settings.html" class="nav-item" data-testid="nav-item-settings"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></a>
+        <a href="admin.html" class="nav-item" data-testid="nav-item-admin"><span class="nav-icon">🛡</span><span class="nav-label">Admin Panel</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="header">
+        <div class="header-left">
+          <button class="btn-sidebar-toggle" data-testid="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
+          <nav class="breadcrumb" data-testid="breadcrumb">
+            <a href="dashboard.html">Home</a><span class="separator">/</span><span class="current">Settings</span>
+          </nav>
+        </div>
+        <div class="header-right">
+          <div class="notifications-wrapper">
+            <button class="btn btn-icon" data-testid="btn-notifications" onclick="toggleNotifications()">🔔<span class="notification-badge" data-testid="notification-unread-count">3</span></button>
+            <div id="notifications-panel" class="notifications-panel" data-testid="notifications-panel"><div class="notifications-header"><span style="font-weight:600;color:var(--text-white);">Notifications</span></div></div>
+          </div>
+          <div class="user-menu-wrapper">
+            <button class="user-avatar" data-testid="user-avatar-menu" onclick="toggleUserMenu()">JD</button>
+            <div id="user-dropdown" class="user-dropdown">
+              <div class="user-dropdown-header"><div class="user-dropdown-name" data-testid="user-display-name">John Doe</div></div>
+              <a href="login.html" class="user-dropdown-item danger" data-testid="menu-item-logout">🚪 Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content" data-testid="main-content">
+        <div class="page-header">
+          <h1>Settings</h1>
+        </div>
+
+        <!-- Settings Tabs -->
+        <div id="settings-tabs" data-testid="settings-tabs">
+          <div class="tabs">
+            <button class="tab tab--active" data-testid="settings-tab-profile" data-tab="profile" onclick="switchTab('profile','settings-tabs')">👤 Profile</button>
+            <button class="tab" data-testid="settings-tab-security" data-tab="security" onclick="switchTab('security','settings-tabs')">🔒 Security</button>
+          </div>
+
+          <!-- Profile Tab -->
+          <div id="tab-profile" class="tab-content active">
+            <div class="card" data-testid="form-profile">
+              <div class="card-header">
+                <h3 class="card-title">Profile Information</h3>
+              </div>
+              <form onsubmit="saveProfile(event)">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-lg);">
+                  <div class="form-group">
+                    <label class="form-label" for="input-first-name">First Name</label>
+                    <input type="text" id="input-first-name" class="form-input" value="John">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-last-name">Last Name</label>
+                    <input type="text" id="input-last-name" class="form-input" value="Doe">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-email">Email</label>
+                    <input type="email" id="input-email" class="form-input" value="john.doe@company.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-phone">Phone</label>
+                    <input type="tel" id="input-phone" class="form-input" value="+1 (555) 123-4567">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-department">Department</label>
+                    <input type="text" id="input-department" class="form-input" value="Engineering">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-title">Job Title</label>
+                    <input type="text" id="input-title" class="form-input" value="Senior QA Engineer">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="textarea-bio">Bio</label>
+                  <textarea id="textarea-bio" class="form-textarea" rows="3">Experienced QA engineer specializing in test automation and quality assurance processes.</textarea>
+                </div>
+                <div style="display:flex; justify-content:flex-end;">
+                  <button type="submit" class="btn btn-primary" data-testid="btn-save-profile">Save Profile</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Security Tab -->
+          <div id="tab-security" class="tab-content">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Change Password</h3>
+              </div>
+              <form onsubmit="changePassword(event)">
+                <div style="max-width:480px;">
+                  <div class="form-group">
+                    <label class="form-label" for="input-current-password">Current Password</label>
+                    <input type="password" id="input-current-password" data-testid="input-current-password" class="form-input" placeholder="Enter current password">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-new-password">New Password</label>
+                    <input type="password" id="input-new-password" data-testid="input-new-password" class="form-input" placeholder="Enter new password">
+                    <div style="font-size:var(--font-size-xs); color:var(--text-muted); margin-top:var(--space-xs);">Must be at least 12 characters with uppercase, lowercase, number, and special character.</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-confirm-password">Confirm New Password</label>
+                    <input type="password" id="input-confirm-password" data-testid="input-confirm-password" class="form-input" placeholder="Confirm new password">
+                  </div>
+                  <button type="submit" class="btn btn-primary" data-testid="btn-change-password">Change Password</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card" style="margin-top:var(--space-lg);">
+              <div class="card-header">
+                <h3 class="card-title">Two-Factor Authentication</h3>
+              </div>
+              <p style="color:var(--text-secondary); margin-bottom:var(--space-md);">Add an extra layer of security to your account with two-factor authentication.</p>
+              <div class="alert alert-info">
+                <span class="alert-icon">ℹ</span>
+                <span>Two-factor authentication is currently <strong>disabled</strong>.</span>
+              </div>
+              <button class="btn btn-secondary">Enable 2FA</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
