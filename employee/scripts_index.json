@@ -1,0 +1,166 @@
+[
+  {
+    "filename": "test_approval_workflow.py",
+    "class_names": [
+      "TestApprovalWorkflow"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_login",
+      "_navigate_to_record",
+      "test_submit_record_for_approval",
+      "test_approve_record",
+      "test_reject_record_with_reason",
+      "test_approval_history"
+    ],
+    "docstring": "Test Approval Workflow — Selenium regression test for the record approval process.\n\nCovers:\n  - Submit a record for approval\n  - Approve a submitted record\n  - Reject a submitted record with reason\n  - Verify approval history/audit trail\n  - Verify email notification on approval | test_submit_record_for_approval: Test submitting a draft record for approval.\n\nSteps:\n1. Login as regular user\n2. Navigate to draft record REC-005\n3. Verify status is 'Draft'\n4. Click 'Submit for Approval' button\n5. Co",
+    "imports": [
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 24,
+    "css_selector_count": 0,
+    "line_count": 187
+  },
+  {
+    "filename": "test_export_report.py",
+    "class_names": [
+      "TestExportReport"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_login",
+      "test_export_all_records_csv",
+      "test_export_filtered_records_pdf",
+      "test_export_with_date_range"
+    ],
+    "docstring": "Test Export Report — Selenium regression test for exporting records to CSV/PDF.\n\nCovers:\n  - Export all records to CSV\n  - Export filtered records to PDF\n  - Verify download file exists\n  - Export with date range filter\n  - Large dataset export with progress indicator | test_export_all_records_csv: Test exporting all records to CSV format.\n\nSteps:\n1. Navigate to records list\n2. Click Export button\n3. Select CSV from dropdown\n4. Wait for export progress to complete\n5. Verify success message\n6. Ve",
+    "imports": [
+      "os",
+      "time",
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 26,
+    "css_selector_count": 0,
+    "line_count": 149
+  },
+  {
+    "filename": "test_form_submission.py",
+    "class_names": [
+      "TestFormSubmission"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_fill_form",
+      "test_successful_form_submission",
+      "test_required_fields_validation",
+      "test_invalid_email_validation",
+      "test_form_reset_clears_fields",
+      "test_success_message_dismissed_on_new_submission"
+    ],
+    "docstring": "Test Form Submission — Selenium regression test for the contact/feedback form.\n\nCovers:\n  - Successful form submission with all fields\n  - Required field validation\n  - Email format validation\n  - Success message verification\n  - Form reset after submission | test_successful_form_submission: Test submitting a fully filled form shows success message.\n\nSteps:\n1. Navigate to form page\n2. Fill in First Name, Last Name, Email, Phone\n3. Select a Subject from the dropdown\n4. Enter a message in t | test",
+    "imports": [
+      "time",
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 29,
+    "css_selector_count": 0,
+    "line_count": 203
+  },
+  {
+    "filename": "test_login.py",
+    "class_names": [
+      "TestLoginPage"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "test_valid_login",
+      "test_invalid_password",
+      "test_empty_fields_validation",
+      "test_remember_me_checkbox",
+      "test_forgot_password_link"
+    ],
+    "docstring": "Test Login Page — Selenium regression test for user authentication.\n\nCovers:\n  - Valid login with correct credentials\n  - Invalid login with wrong password\n  - Empty field validation\n  - Remember me checkbox\n  - Forgot password link navigation | test_valid_login: Test successful login with valid credentials.\n\nSteps:\n1. Navigate to login page\n2. Enter valid username\n3. Enter valid password\n4. Click Login button\n5. Verify redirect to dashboard\n6. Verify welcome  | test_invalid_password: Test login",
+    "imports": [
+      "time",
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 16,
+    "css_selector_count": 0,
+    "line_count": 162
+  },
+  {
+    "filename": "test_record_locking.py",
+    "class_names": [
+      "TestRecordLocking"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_login_as_admin",
+      "_navigate_to_record",
+      "test_lock_approved_record",
+      "test_unlock_locked_record",
+      "test_non_admin_cannot_lock"
+    ],
+    "docstring": "Test Record Locking — Selenium regression test for the record lock/unlock workflow.\n\nCovers:\n  - Lock an approved record\n  - Verify locked status badge\n  - Verify edit button disabled when locked\n  - Unlock a locked record\n  - Permission check: non-admin cannot lock | test_lock_approved_record: Test locking an approved record changes its status to Locked.\n\nPre-conditions:\n- User is logged in as admin\n- Record REC-001 exists with status 'Approved'\n\nSteps:\n1. Navigate to records list\n2. Click  | t",
+    "imports": [
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 29,
+    "css_selector_count": 0,
+    "line_count": 179
+  },
+  {
+    "filename": "test_record_search_filter.py",
+    "class_names": [
+      "TestRecordSearchFilter"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_login",
+      "test_search_by_keyword",
+      "test_filter_by_status",
+      "test_filter_by_date_range",
+      "test_pagination",
+      "test_clear_filters",
+      "test_sort_by_column"
+    ],
+    "docstring": "Test Record Search and Filter — Selenium regression test for the records list page.\n\nCovers:\n  - Search records by keyword\n  - Filter by status dropdown\n  - Filter by date range\n  - Combined search and filter\n  - Pagination navigation\n  - Sort by column headers\n  - Clear filters | test_search_by_keyword: Test searching records by keyword in the search box.\n\nSteps:\n1. Navigate to records list\n2. Enter search keyword in search box\n3. Click search button\n4. Verify results contain the keyword\n5. Ver",
+    "imports": [
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.common.keys",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 37,
+    "css_selector_count": 0,
+    "line_count": 218
+  }
+]
