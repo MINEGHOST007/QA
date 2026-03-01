@@ -77,7 +77,8 @@ Before writing the final output:
 1. Review every selector and URL you plan to include.
 2. Confirm each one appeared in an actual tool result (not assumed or guessed).
 3. Collect any terms that were NOT found — these go into the "Documentation Gaps" section.
-4. Update your todos: mark verification complete.
+4. For every **role requirement** cited in the navigation guide (e.g. `Required role: Admin`), add a "Documentation Gaps" note stating that the current frontend does not enforce role-based access at the UI level — the button or action is visible to any logged-in user. The role annotation describes intended access control, not enforced behaviour.
+5. Update your todos: mark verification complete.
 
 ### Phase 7 — Assemble the Expanded Test Case
 

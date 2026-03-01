@@ -10,6 +10,52 @@ Search this file for a specific term or element to get its selector and usage co
 
 ---
 
+## Authentication
+
+### Login Page Elements
+
+**Page URL**: `http://localhost:8080/login.html`  
+**Page class**: `body.auth-page`
+
+| Element              | `data-testid`          | Type       | Placeholder / Label             | Notes                                      |
+| -------------------- | ---------------------- | ---------- | ------------------------------- | ------------------------------------------ |
+| Username field       | `input-username`       | `text`     | "Enter your username"           | Required                                   |
+| Password field       | `input-password`       | `password` | "Enter your password"           | Required                                   |
+| Sign In button       | `btn-login`            | `submit`   | "Sign In"                       | Full-width primary button                  |
+| Login error banner   | `alert-login-error`    | `div`      | "Invalid username or password." | Initially `display:none`; shown on failure |
+| Forgot password link | `link-forgot-password` | `a`        | "Forgot your password?"         | Links to `forgot-password.html`            |
+
+**Valid test credentials**:
+
+| Username | Password   | Role  |
+| -------- | ---------- | ----- |
+| `admin`  | `admin123` | Admin |
+
+**Interaction** — sign in:
+
+```
+Selector: [data-testid="input-username"] → type username
+Selector: [data-testid="input-password"] → type password
+Selector: [data-testid="btn-login"]      → click to submit
+On success  → redirects to dashboard.html
+On failure  → [data-testid="alert-login-error"] becomes visible
+```
+
+### Forgot Password Page Elements
+
+**Page URL**: `http://localhost:8080/forgot-password.html`  
+**Page class**: `body.auth-page`
+
+| Element                  | `data-testid`       | Type     | Placeholder / Label                                          | Notes                    |
+| ------------------------ | ------------------- | -------- | ------------------------------------------------------------ | ------------------------ |
+| Email input              | `input-reset-email` | `email`  | "you@company.com"                                            | Required                 |
+| Send Reset Link button   | `btn-send-reset`    | `submit` | "Send Reset Link"                                            | Primary button           |
+| Reset confirmation alert | `alert-reset-sent`  | `div`    | "A password reset link has been sent to your email address." | Initially `display:none` |
+
+**Back link**: `← Back to Sign In` — navigates back to `login.html` (plain `<a>` tag, no `data-testid`).
+
+---
+
 ## Status Values
 
 ### Status Badge
@@ -46,6 +92,7 @@ Expected class contains: badge--draft | badge--pending | badge--approved | badge
 **Description**: The dominant call-to-action on a page or modal.  
 **CSS class**: `.btn-primary`  
 **Examples in demo**:
+
 - "Sign In" on `login.html`
 - "Submit" on `record-form.html`
 - "▶ Run Report" on `reports.html`
@@ -84,18 +131,19 @@ Expected class contains: badge--draft | badge--pending | badge--approved | badge
 **Location**: `record-detail.html` — page header actions area.
 
 **Interaction**:
+
 1. Click `[data-testid="btn-actions-menu"]`.
 2. Dropdown `#actions-dropdown` (class `actions-dropdown`) opens.
 3. Click the desired action item (`[data-testid="action-<action-name>"]`).
 
 **Available actions in dropdown**:
 
-| Action         | `data-testid`          | Label             |
-| -------------- | ---------------------- | ----------------- |
-| Lock Record    | `action-lock-record`   | 🔒 Lock Record   |
-| Unlock Record  | `action-unlock-record` | 🔓 Unlock Record |
-| Archive        | `action-archive`       | 📦 Archive       |
-| Delete         | `action-delete-record` | 🗑 Delete        |
+| Action        | `data-testid`          | Label            |
+| ------------- | ---------------------- | ---------------- |
+| Lock Record   | `action-lock-record`   | 🔒 Lock Record   |
+| Unlock Record | `action-unlock-record` | 🔓 Unlock Record |
+| Archive       | `action-archive`       | 📦 Archive       |
+| Delete        | `action-delete-record` | 🗑 Delete        |
 
 ---
 
@@ -110,6 +158,7 @@ Expected class contains: badge--draft | badge--pending | badge--approved | badge
 ### Password Input
 
 **Selector examples**:
+
 - Login: `[data-testid="input-password"]` (on `login.html`)
 - Current password: `[data-testid="input-current-password"]` (on `settings.html`, Security tab)
 - New password: `[data-testid="input-new-password"]` (on `settings.html`, Security tab)
@@ -164,20 +213,21 @@ Expected class contains: badge--draft | badge--pending | badge--approved | badge
 
 Fields used on the New Record and Edit Record form (`record-form.html`):
 
-| Field label | `data-testid`                 | Type       | Required | Placeholder / Options                                        |
-| ----------- | ----------------------------- | ---------- | -------- | ------------------------------------------------------------ |
-| Title       | `input-record-title`          | text       | Yes      | "Enter record title"                                         |
-| Type        | `select-record-type`          | select     | Yes      | Compliance, Infrastructure, HR Document, Policy, Technical   |
-| Assignee    | `select-record-assignee`      | select     | No       | Sarah Connor, Mike Chen, Emily Park, Alex Kim, Lisa Wong     |
-| Priority    | `select-record-priority`      | select     | No       | Low, Medium (default), High, Critical                        |
-| Due Date    | `datepicker-record-due-date`  | date       | No       | —                                                            |
-| Attachments | `input-record-attachments`    | file       | No       | `multiple` attribute enabled                                 |
-| Description | `textarea-record-description` | textarea   | No       | "Describe the record…" (6 rows)                              |
+| Field label | `data-testid`                 | Type     | Required | Placeholder / Options                                      |
+| ----------- | ----------------------------- | -------- | -------- | ---------------------------------------------------------- |
+| Title       | `input-record-title`          | text     | Yes      | "Enter record title"                                       |
+| Type        | `select-record-type`          | select   | Yes      | Compliance, Infrastructure, HR Document, Policy, Technical |
+| Assignee    | `select-record-assignee`      | select   | No       | Sarah Connor, Mike Chen, Emily Park, Alex Kim, Lisa Wong   |
+| Priority    | `select-record-priority`      | select   | No       | Low, Medium (default), High, Critical                      |
+| Due Date    | `datepicker-record-due-date`  | date     | No       | —                                                          |
+| Attachments | `input-record-attachments`    | file     | No       | `multiple` attribute enabled                               |
+| Description | `textarea-record-description` | textarea | No       | "Describe the record…" (6 rows)                            |
 
 **Submit**: `[data-testid="btn-submit-record"]` (label: "Submit")  
 **Cancel**: `<a>` linking to `records.html` (label: "Cancel")
 
 **Validation errors**:
+
 - Form-level: `[data-testid="form-error-summary"]` — text: "Please fix the highlighted errors before submitting."
 - Title error: `[data-testid="field-error-title"]` — text: "Title is required."
 - Type error: `[data-testid="field-error-type"]` — text: "Type is required."
@@ -188,12 +238,12 @@ Fields used on the New Record and Edit Record form (`record-form.html`):
 
 Fields inside the filter panel (`[data-testid="filter-panel"]`) on `records.html`:
 
-| Field      | `data-testid`     | Type   | Options / Notes                                                  |
-| ---------- | ----------------- | ------ | ---------------------------------------------------------------- |
-| Status     | `filter-status`   | select | All Statuses, Draft, Pending Review, Approved, Rejected, Locked, Archived |
-| Type       | `filter-type`     | select | All Types, Compliance, Infrastructure, HR Document, Policy       |
-| From Date  | `filter-date-from`| date   | —                                                                |
-| To Date    | `filter-date-to`  | date   | —                                                                |
+| Field     | `data-testid`      | Type   | Options / Notes                                                           |
+| --------- | ------------------ | ------ | ------------------------------------------------------------------------- |
+| Status    | `filter-status`    | select | All Statuses, Draft, Pending Review, Approved, Rejected, Locked, Archived |
+| Type      | `filter-type`      | select | All Types, Compliance, Infrastructure, HR Document, Policy                |
+| From Date | `filter-date-from` | date   | —                                                                         |
+| To Date   | `filter-date-to`   | date   | —                                                                         |
 
 **Apply**: `[data-testid="btn-apply-filters"]` (label: "Apply")  
 **Toggle panel**: `[data-testid="btn-filter"]` (label: "🔽 Filter")  
@@ -207,6 +257,7 @@ Fields inside the filter panel (`[data-testid="filter-panel"]`) on `records.html
 ### Modal Structure
 
 All modals in the demo frontend follow this structure:
+
 - **Overlay**: `<div class="modal-overlay">` with a unique `id` and optionally a `data-testid`.
 - **Header**: `.modal-header` — contains `<h3>` title and `×` close button.
 - **Body**: `.modal-body` — contains content, forms, alerts.
@@ -214,15 +265,15 @@ All modals in the demo frontend follow this structure:
 
 ### Named Modals
 
-| Action            | Modal `data-testid` / `id` | Confirm `data-testid`   | Confirm Label  | Input Field(s)                      |
-| ----------------- | -------------------------- | ----------------------- | -------------- | ----------------------------------- |
-| Submit for Review | `modal-confirm` / `modal-submit-review` | `btn-confirm-workflow`  | "Confirm"      | `input-workflow-comment` (optional) |
-| Approve           | `modal-approve`            | `btn-confirm-approval`  | "Approve"      | `input-approval-note` (optional)    |
-| Reject            | `modal-reject`             | `btn-confirm-rejection` | "Reject"       | `input-rejection-reason` (required) |
-| Lock              | `modal-lock`               | `btn-confirm-lock`      | "Lock"         | —                                   |
-| Unlock            | `modal-unlock`             | `btn-confirm-unlock`    | "Unlock"       | `input-unlock-reason` (required)    |
-| Delete            | `modal-confirm-delete`     | `btn-confirm-delete`    | "Yes, Delete"  | —                                   |
-| Invite User       | (id: `modal-invite`)       | —                       | "Send Invitation" | Email input + Role select        |
+| Action            | Modal `data-testid` / `id`              | Confirm `data-testid`   | Confirm Label     | Input Field(s)                      |
+| ----------------- | --------------------------------------- | ----------------------- | ----------------- | ----------------------------------- |
+| Submit for Review | `modal-confirm` / `modal-submit-review` | `btn-confirm-workflow`  | "Confirm"         | `input-workflow-comment` (optional) |
+| Approve           | `modal-approve`                         | `btn-confirm-approval`  | "Approve"         | `input-approval-note` (optional)    |
+| Reject            | `modal-reject`                          | `btn-confirm-rejection` | "Reject"          | `input-rejection-reason` (required) |
+| Lock              | `modal-lock`                            | `btn-confirm-lock`      | "Lock"            | —                                   |
+| Unlock            | `modal-unlock`                          | `btn-confirm-unlock`    | "Unlock"          | `input-unlock-reason` (required)    |
+| Delete            | `modal-confirm-delete`                  | `btn-confirm-delete`    | "Yes, Delete"     | —                                   |
+| Invite User       | (id: `modal-invite`)                    | —                       | "Send Invitation" | Email input + Role select           |
 
 ### Close / Dismiss Modal
 
@@ -247,14 +298,16 @@ All modals in the demo frontend follow this structure:
 **Description**: Transient success/error message overlaid in the top-right.  
 **Container**: `#toast-container` (CSS class: `toast-container`).  
 **Trigger**: JavaScript `showToast(type, message)` where type is `'success'` or `'error'`.  
-**Toast element**: `[data-testid="toast-success"]` or class-based.  
-**Behavior**: Auto-dismiss after timeout.
+**Toast element**: `[data-testid="toast-success"]` for success; `[data-testid="toast-error"]` for error.  
+**Dismiss button**: `.toast-dismiss` (label: `×`) inside the toast — click to dismiss immediately.  
+**Behavior**: Auto-dismiss after **4 seconds** (hardcoded `setTimeout` in `app.js`).
 
 ### Alert Banner
 
 **Description**: A persistent inline notification (not self-dismissing).  
 **CSS classes**: `.alert .alert-error`, `.alert .alert-success`, `.alert .alert-info`  
 **Instances in demo**:
+
 - `[data-testid="alert-login-error"]` — login failure ("Invalid username or password."), initially `display:none`.
 - `[data-testid="alert-reset-sent"]` — forgotten password success, initially `display:none`.
 - Delete confirmation modal contains a `.alert-error` warning.
@@ -265,6 +318,7 @@ All modals in the demo frontend follow this structure:
 **Description**: Per-field red text below an input, initially hidden.  
 **CSS class**: `.form-error`  
 **Instances**:
+
 - `[data-testid="field-error-title"]` — "Title is required."
 - `[data-testid="field-error-type"]` — "Type is required."
 
@@ -275,6 +329,7 @@ All modals in the demo frontend follow this structure:
 **Description**: Shown when a list has no results.  
 **CSS class**: `.empty-state`  
 **Instances**:
+
 - `[data-testid="empty-state-records"]` — icon: 📭, heading: "No records found", initially `display:none`.
 - `[data-testid="empty-state-reports"]` — icon: 📭, heading: "No report data", initially `display:none`.
 
@@ -299,13 +354,13 @@ All modals in the demo frontend follow this structure:
 
 **Nav items**:
 
-| Menu Item   | `data-testid`          | `href`           | Icon | Section  |
-| ----------- | ---------------------- | ---------------- | ---- | -------- |
-| Dashboard   | `nav-item-dashboard`   | `dashboard.html` | 📊   | Main     |
-| Records     | `nav-item-records`     | `records.html`   | 📁   | Main     |
-| Reports     | `nav-item-reports`     | `reports.html`   | 📈   | Main     |
-| Settings    | `nav-item-settings`    | `settings.html`  | ⚙    | Account  |
-| Admin Panel | `nav-item-admin`       | `admin.html`     | 🛡   | Account  |
+| Menu Item   | `data-testid`        | `href`           | Icon | Section |
+| ----------- | -------------------- | ---------------- | ---- | ------- |
+| Dashboard   | `nav-item-dashboard` | `dashboard.html` | 📊   | Main    |
+| Records     | `nav-item-records`   | `records.html`   | 📁   | Main    |
+| Reports     | `nav-item-reports`   | `reports.html`   | 📈   | Main    |
+| Settings    | `nav-item-settings`  | `settings.html`  | ⚙    | Account |
+| Admin Panel | `nav-item-admin`     | `admin.html`     | 🛡   | Account |
 
 ### Breadcrumb
 
@@ -314,6 +369,7 @@ All modals in the demo frontend follow this structure:
 **HTML element**: `<nav class="breadcrumb">`  
 **Structure**: `<a>Home</a> / <span class="current">Current Page</span>`  
 **Breadcrumb trails by page**:
+
 - Dashboard: Home / Dashboard
 - Records: Home / Records
 - Record Detail: Home / Records / Q4 Financial Review
@@ -329,10 +385,12 @@ All modals in the demo frontend follow this structure:
 **Tab content**: The matching `<div id="tab-<name>" class="tab-content">` div gets class `active`.
 
 **Settings tabs** (container: `[data-testid="settings-tabs"]`):
+
 - `[data-testid="settings-tab-profile"]` — label: "👤 Profile"
 - `[data-testid="settings-tab-security"]` — label: "🔒 Security"
 
 **Admin tabs** (container: `#admin-tabs`):
+
 - `[data-testid="admin-tab-users"]` — label: "👥 Users"
 - `[data-testid="admin-tab-roles"]` — label: "🛡 Roles"
 
@@ -343,11 +401,11 @@ All modals in the demo frontend follow this structure:
 **Selector**: `[data-testid="pagination-controls"]`  
 **Location**: `records.html` — bottom of the records table.
 
-| Element         | `data-testid`       | Type     | Notes                                    |
-| --------------- | -------------------- | -------- | ---------------------------------------- |
-| Previous page   | `btn-page-prev`      | button   | Disabled when on first page              |
-| Next page       | `btn-page-next`      | button   | Navigates to next page                   |
-| Page size select| `select-page-size`   | select   | Options: "10 / page", "25 / page", "50 / page" |
+| Element          | `data-testid`      | Type   | Notes                                          |
+| ---------------- | ------------------ | ------ | ---------------------------------------------- |
+| Previous page    | `btn-page-prev`    | button | Disabled when on first page                    |
+| Next page        | `btn-page-next`    | button | Navigates to next page                         |
+| Page size select | `select-page-size` | select | Options: "10 / page", "25 / page", "50 / page" |
 
 **Status text**: "Showing 1-6 of 42 records"
 
@@ -378,6 +436,7 @@ All modals in the demo frontend follow this structure:
 **Selector pattern**: `[data-testid="th-sort-<columnName>"]`  
 **Location**: `records.html` table headers.  
 **Available**:
+
 - `[data-testid="th-sort-title"]` — has `.sort--asc` by default
 - `[data-testid="th-sort-type"]`
 - `[data-testid="th-sort-status"]`
@@ -405,6 +464,7 @@ All modals in the demo frontend follow this structure:
 **Dropdown id**: `user-dropdown`
 
 **Dropdown items**:
+
 - ⚙ Settings → `settings.html`
 - 👤 Profile → `settings.html`
 - 🚪 Sign Out → `login.html` (`[data-testid="menu-item-logout"]`)
@@ -413,14 +473,14 @@ All modals in the demo frontend follow this structure:
 
 **Selector**: `[data-testid="user-display-name"]`  
 **Default value**: "John Doe"  
-**Location**: Inside user dropdown header.
+**Location**: Inside user dropdown header — present on all authenticated pages.
 
 ### Role Badge
 
 **Description**: Shows the current user's role.  
 **Selector**: `[data-testid="user-role-badge"]`  
 **Default value**: "Admin" (CSS class `.badge--approved`)  
-**Location**: Inside user dropdown header, below display name.
+**Location**: Inside user dropdown header, below display name — present on `dashboard.html`, `records.html`, and `record-detail.html` only. Not rendered on `reports.html`, `settings.html`, `admin.html`, or `record-form.html`.
 
 ---
 
@@ -428,12 +488,12 @@ All modals in the demo frontend follow this structure:
 
 ### Workflow Buttons (Record Detail Page)
 
-| Button               | `data-testid`            | Label                  | CSS class      |
-| -------------------- | ------------------------ | ---------------------- | -------------- |
-| Submit for Review    | `btn-submit-for-review`  | 📤 Submit for Review   | `.btn-primary` |
-| Approve              | `btn-approve`            | ✓ Approve             | `.btn-success` |
-| Reject               | `btn-reject`             | ✕ Reject              | `.btn-danger`  |
-| Edit                 | `btn-edit-record`        | ✏ Edit                | `.btn-secondary` (is an `<a>` tag → `record-form.html`) |
+| Button            | `data-testid`           | Label                | CSS class                                               |
+| ----------------- | ----------------------- | -------------------- | ------------------------------------------------------- |
+| Submit for Review | `btn-submit-for-review` | 📤 Submit for Review | `.btn-primary`                                          |
+| Approve           | `btn-approve`           | ✓ Approve            | `.btn-success`                                          |
+| Reject            | `btn-reject`            | ✕ Reject             | `.btn-danger`                                           |
+| Edit              | `btn-edit-record`       | ✏ Edit               | `.btn-secondary` (is an `<a>` tag → `record-form.html`) |
 
 ### Lock Icon (Locked Record Indicator)
 
@@ -483,17 +543,17 @@ All modals in the demo frontend follow this structure:
 
 **Key selectors on this page**:
 
-| Element            | `data-testid`           | Notes                                    |
-| ------------------ | ----------------------- | ---------------------------------------- |
-| Record summary     | `record-summary`        | Card with Title, Type, Priority, etc.    |
-| Status badge       | `status-badge`          | Shows current status                     |
-| Lock icon          | `record-lock-icon`      | Hidden unless locked                     |
-| Activity log       | `activity-log`          | Right sidebar timeline                   |
-| Submit for Review  | `btn-submit-for-review` | Workflow button                          |
-| Approve            | `btn-approve`           | Workflow button                          |
-| Reject             | `btn-reject`            | Workflow button                          |
-| Edit               | `btn-edit-record`       | Links to `record-form.html`             |
-| Actions menu       | `btn-actions-menu`      | Opens lock/unlock/archive/delete dropdown|
+| Element           | `data-testid`           | Notes                                     |
+| ----------------- | ----------------------- | ----------------------------------------- |
+| Record summary    | `record-summary`        | Card with Title, Type, Priority, etc.     |
+| Status badge      | `status-badge`          | Shows current status                      |
+| Lock icon         | `record-lock-icon`      | Hidden unless locked                      |
+| Activity log      | `activity-log`          | Right sidebar timeline                    |
+| Submit for Review | `btn-submit-for-review` | Workflow button                           |
+| Approve           | `btn-approve`           | Workflow button                           |
+| Reject            | `btn-reject`            | Workflow button                           |
+| Edit              | `btn-edit-record`       | Links to `record-form.html`               |
+| Actions menu      | `btn-actions-menu`      | Opens lock/unlock/archive/delete dropdown |
 
 ---
 
@@ -501,42 +561,42 @@ All modals in the demo frontend follow this structure:
 
 ### Users Tab
 
-| Element              | `data-testid`                          | Notes                                    |
-| -------------------- | -------------------------------------- | ---------------------------------------- |
-| Users table          | `admin-users-table`                    | Table with all users                     |
-| Invite user button   | `btn-invite-user`                      | Label: "+ Invite User"                   |
-| Deactivate user      | `action-deactivate-user-<userId>`      | Per-row; e.g. `-u002`, `-u003`, `-u004`, `-u006` |
+| Element            | `data-testid`                     | Notes                                            |
+| ------------------ | --------------------------------- | ------------------------------------------------ |
+| Users table        | `admin-users-table`               | Table with all users                             |
+| Invite user button | `btn-invite-user`                 | Label: "+ Invite User"                           |
+| Deactivate user    | `action-deactivate-user-<userId>` | Per-row; e.g. `-u002`, `-u003`, `-u004`, `-u006` |
 
 ### Roles Tab
 
-| Element              | `data-testid`                          | Notes                                    |
-| -------------------- | -------------------------------------- | ---------------------------------------- |
-| Roles list           | `admin-roles-list`                     | Grid of role cards                       |
-| Edit Admin role      | `btn-edit-role-admin`                  | Edit button on Admin card                |
-| Edit Reviewer role   | `btn-edit-role-reviewer`               | Edit button on Reviewer card             |
-| Edit Editor role     | `btn-edit-role-editor`                 | Edit button on Editor card               |
-| Edit Viewer role     | `btn-edit-role-viewer`                 | Edit button on Viewer card               |
+| Element            | `data-testid`            | Notes                        |
+| ------------------ | ------------------------ | ---------------------------- |
+| Roles list         | `admin-roles-list`       | Grid of role cards           |
+| Edit Admin role    | `btn-edit-role-admin`    | Edit button on Admin card    |
+| Edit Reviewer role | `btn-edit-role-reviewer` | Edit button on Reviewer card |
+| Edit Editor role   | `btn-edit-role-editor`   | Edit button on Editor card   |
+| Edit Viewer role   | `btn-edit-role-viewer`   | Edit button on Viewer card   |
 
 ---
 
 ## URLs Reference
 
-| Page                | File                    | Full URL                                    |
-| ------------------- | ----------------------- | ------------------------------------------- |
-| Login               | `login.html`            | `http://localhost:8080/login.html`           |
-| Forgot Password     | `forgot-password.html`  | `http://localhost:8080/forgot-password.html` |
-| Dashboard           | `dashboard.html`        | `http://localhost:8080/dashboard.html`       |
-| Records List        | `records.html`          | `http://localhost:8080/records.html`         |
-| Record Detail       | `record-detail.html`    | `http://localhost:8080/record-detail.html`   |
-| New / Edit Record   | `record-form.html`      | `http://localhost:8080/record-form.html`     |
-| Reports             | `reports.html`          | `http://localhost:8080/reports.html`         |
-| Settings            | `settings.html`         | `http://localhost:8080/settings.html`        |
-| Admin Panel         | `admin.html`            | `http://localhost:8080/admin.html`           |
+| Page              | File                   | Full URL                                     |
+| ----------------- | ---------------------- | -------------------------------------------- |
+| Login             | `login.html`           | `http://localhost:8080/login.html`           |
+| Forgot Password   | `forgot-password.html` | `http://localhost:8080/forgot-password.html` |
+| Dashboard         | `dashboard.html`       | `http://localhost:8080/dashboard.html`       |
+| Records List      | `records.html`         | `http://localhost:8080/records.html`         |
+| Record Detail     | `record-detail.html`   | `http://localhost:8080/record-detail.html`   |
+| New / Edit Record | `record-form.html`     | `http://localhost:8080/record-form.html`     |
+| Reports           | `reports.html`         | `http://localhost:8080/reports.html`         |
+| Settings          | `settings.html`        | `http://localhost:8080/settings.html`        |
+| Admin Panel       | `admin.html`           | `http://localhost:8080/admin.html`           |
 
 ---
 
 ## Test Credentials
 
-| Username | Password   | Role   |
-| -------- | ---------- | ------ |
-| `admin`  | `admin123` | Admin  |
+| Username | Password   | Role  |
+| -------- | ---------- | ----- |
+| `admin`  | `admin123` | Admin |

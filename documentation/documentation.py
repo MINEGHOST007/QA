@@ -229,7 +229,7 @@ def create_documentation_agent(model_id: str | None = None) -> Any:
         skills=["./skills/"],
         tools=ALL_TOOLS,
         middleware=[model_retry, tool_retry],
-        backend=FilesystemBackend(root_dir=str(DOC_DIR), virtual_mode=True),
+        backend=FilesystemBackend(root_dir=str(DOC_DIR / "workdir"), virtual_mode=True),
     )
 
 

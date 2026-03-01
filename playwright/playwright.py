@@ -336,7 +336,7 @@ async def create_playwright_agent(
     )
 
     # --- MCP client ---
-    mcp_args = ["@playwright/mcp@latest"]
+    mcp_args = ["@playwright/mcp@latest", "--save-video", "1280x720", "--output-dir", str(RUNS_DIR / "videos")]
     if headless:
         mcp_args.append("--headless")
 

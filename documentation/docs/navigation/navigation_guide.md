@@ -10,17 +10,17 @@ workflow. The application is served as a static site via `http://localhost:8080`
 
 ## Page Inventory
 
-| Page                | File                  | Full URL                                      |
-| ------------------- | --------------------- | --------------------------------------------- |
-| Login               | `login.html`          | `http://localhost:8080/login.html`             |
-| Forgot Password     | `forgot-password.html`| `http://localhost:8080/forgot-password.html`   |
-| Dashboard           | `dashboard.html`      | `http://localhost:8080/dashboard.html`         |
-| Records List        | `records.html`        | `http://localhost:8080/records.html`           |
-| Record Detail       | `record-detail.html`  | `http://localhost:8080/record-detail.html`     |
-| New / Edit Record   | `record-form.html`    | `http://localhost:8080/record-form.html`       |
-| Reports             | `reports.html`        | `http://localhost:8080/reports.html`           |
-| Settings            | `settings.html`       | `http://localhost:8080/settings.html`          |
-| Admin Panel         | `admin.html`          | `http://localhost:8080/admin.html`             |
+| Page              | File                   | Full URL                                     |
+| ----------------- | ---------------------- | -------------------------------------------- |
+| Login             | `login.html`           | `http://localhost:8080/login.html`           |
+| Forgot Password   | `forgot-password.html` | `http://localhost:8080/forgot-password.html` |
+| Dashboard         | `dashboard.html`       | `http://localhost:8080/dashboard.html`       |
+| Records List      | `records.html`         | `http://localhost:8080/records.html`         |
+| Record Detail     | `record-detail.html`   | `http://localhost:8080/record-detail.html`   |
+| New / Edit Record | `record-form.html`     | `http://localhost:8080/record-form.html`     |
+| Reports           | `reports.html`         | `http://localhost:8080/reports.html`         |
+| Settings          | `settings.html`        | `http://localhost:8080/settings.html`        |
+| Admin Panel       | `admin.html`           | `http://localhost:8080/admin.html`           |
 
 ---
 
@@ -30,33 +30,33 @@ workflow. The application is served as a static site via `http://localhost:8080`
 
 **Selector**: `[data-testid="sidebar-nav"]`
 
-| Menu Item   | `data-testid`          | Navigates To                                     | Label Text    |
-| ----------- | ---------------------- | ------------------------------------------------ | ------------- |
-| Dashboard   | `nav-item-dashboard`   | `dashboard.html`                                 | Dashboard     |
-| Records     | `nav-item-records`     | `records.html`                                   | Records       |
-| Reports     | `nav-item-reports`     | `reports.html`                                   | Reports       |
-| Settings    | `nav-item-settings`    | `settings.html`                                  | Settings      |
-| Admin Panel | `nav-item-admin`       | `admin.html`                                     | Admin Panel   |
+| Menu Item   | `data-testid`        | Navigates To     | Label Text  |
+| ----------- | -------------------- | ---------------- | ----------- |
+| Dashboard   | `nav-item-dashboard` | `dashboard.html` | Dashboard   |
+| Records     | `nav-item-records`   | `records.html`   | Records     |
+| Reports     | `nav-item-reports`   | `reports.html`   | Reports     |
+| Settings    | `nav-item-settings`  | `settings.html`  | Settings    |
+| Admin Panel | `nav-item-admin`     | `admin.html`     | Admin Panel |
 
 **Toggle sidebar**: Click `[data-testid="btn-sidebar-toggle"]` (hamburger icon `☰` in the header).
 
 ### Header
 
-| Element                | `data-testid`               | Type   | Notes                                              |
-| ---------------------- | --------------------------- | ------ | -------------------------------------------------- |
-| Breadcrumb             | `breadcrumb`                | `nav`  | Shows current location path                        |
-| Notifications bell     | `btn-notifications`         | button | Toggles notification dropdown; has badge child     |
-| Unread count badge     | `notification-unread-count` | span   | Displays count (e.g. `3`) inside the bell button   |
-| Notification panel     | `notifications-panel`       | div    | Dropdown that opens on bell click                  |
-| Mark all read          | `btn-mark-all-read`         | button | Inside notification panel; label: "Mark all read"  |
-| User avatar            | `user-avatar-menu`          | button | Top-right; displays user initials (e.g. `JD`)     |
-| User display name      | `user-display-name`         | div    | Inside user dropdown; shows "John Doe"             |
-| User role badge        | `user-role-badge`           | span   | Inside user dropdown; shows role (e.g. "Admin")   |
-| Sign Out               | `menu-item-logout`          | `a`    | Navigates to `login.html`; label: "🚪 Sign Out"   |
+| Element            | `data-testid`               | Type   | Notes                                                                                                                                                                                                          |
+| ------------------ | --------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Breadcrumb         | `breadcrumb`                | `nav`  | Shows current location path                                                                                                                                                                                    |
+| Notifications bell | `btn-notifications`         | button | Toggles notification dropdown; has badge child                                                                                                                                                                 |
+| Unread count badge | `notification-unread-count` | span   | Displays count (e.g. `3`) inside the bell button                                                                                                                                                               |
+| Notification panel | `notifications-panel`       | div    | Dropdown that opens on bell click                                                                                                                                                                              |
+| Mark all read      | `btn-mark-all-read`         | button | Inside notification panel; label: "Mark all read" — present on `dashboard.html`, `records.html`, `record-detail.html` only; other pages have an empty notification panel with no items or mark-all-read button |
+| User avatar        | `user-avatar-menu`          | button | Top-right; displays user initials (e.g. `JD`)                                                                                                                                                                  |
+| User display name  | `user-display-name`         | div    | Inside user dropdown; shows "John Doe"                                                                                                                                                                         |
+| User role badge    | `user-role-badge`           | span   | Inside user dropdown; shows role (e.g. "Admin") — present on `dashboard.html`, `records.html`, `record-detail.html` only (not on records form, reports, settings, admin)                                       |
+| Sign Out           | `menu-item-logout`          | `a`    | Navigates to `login.html`; label: "🚪 Sign Out"                                                                                                                                                                |
 
 ### Toast Notifications
 
-**Container**: `#toast-container` (CSS class `toast-container`). Success/error toasts appear here after actions (submit, delete, save, etc.). Toast element has `data-testid="toast-success"` when triggered.
+**Container**: `#toast-container` (CSS class `toast-container`). Success/error toasts appear here after actions (submit, delete, save, etc.). Toast element has `data-testid="toast-success"` when triggered by `showToast('success', ...)` and `data-testid="toast-error"` for errors. Auto-dismiss after **4 seconds** (hardcoded in `app.js`).
 
 ---
 
@@ -84,6 +84,8 @@ workflow. The application is served as a static site via `http://localhost:8080`
 2. User dropdown opens (id: `user-dropdown`).
 3. Click `[data-testid="menu-item-logout"]` (label: "🚪 Sign Out", `<a>` tag).
 4. Navigates to `login.html`.
+
+**Note**: Dropdown items vary by page. `dashboard.html` shows ⚙ Settings, 👤 Profile, and 🚪 Sign Out. Most other authenticated pages show ⚙ Settings and 🚪 Sign Out only. `admin.html` shows only 🚪 Sign Out. None of the dropdown navigation items use a `data-testid` except `menu-item-logout`.
 
 ### Forgot Password
 
@@ -155,11 +157,11 @@ workflow. The application is served as a static site via `http://localhost:8080`
 
 ### Pagination
 
-| Element         | `data-testid`       | Type     | Notes                                  |
-| --------------- | -------------------- | -------- | -------------------------------------- |
-| Page size select| `select-page-size`   | `select` | Options: "10 / page", "25 / page", "50 / page" |
-| Previous page   | `btn-page-prev`      | button   | Disabled when on first page            |
-| Next page       | `btn-page-next`      | button   | Navigates to next page                 |
+| Element          | `data-testid`      | Type     | Notes                                          |
+| ---------------- | ------------------ | -------- | ---------------------------------------------- |
+| Page size select | `select-page-size` | `select` | Options: "10 / page", "25 / page", "50 / page" |
+| Previous page    | `btn-page-prev`    | button   | Disabled when on first page                    |
+| Next page        | `btn-page-next`    | button   | Navigates to next page                         |
 
 Status text: "Showing 1-6 of 42 records".
 
@@ -170,21 +172,23 @@ Status text: "Showing 1-6 of 42 records".
 
 ### Open a Record Detail
 
-**URL**: `http://localhost:8080/record-detail.html`
+**URL pattern**: `http://localhost:8080/record-detail.html?id=<recordId>`  
+**Base URL** (for static/dashboard links): `http://localhost:8080/record-detail.html`
 
 1. In the records table, click any row `[data-testid="records-table-row"]` (rows have `cursor:pointer` and `onclick` handlers).
 2. OR click the `[data-testid="btn-view-record"]` icon button (👁) on that row.
-3. Detail page loads at `record-detail.html`.
-4. Breadcrumb shows: Home / Records / Q4 Financial Review.
+3. When navigating from the records list (via `app.js`), the URL includes the record's `id` query parameter: `record-detail.html?id=<recordId>`.
+4. When navigating from static links (e.g. dashboard recent-activity table), the URL is `record-detail.html` without a query param.
+5. Breadcrumb shows: Home / Records / Q4 Financial Review.
 
 ### Record Detail Page Elements
 
-| Element              | `data-testid`          | Type     | Notes                                           |
-| -------------------- | ---------------------- | -------- | ----------------------------------------------- |
-| Record summary card  | `record-summary`       | div.card | Contains Title, Type, Priority, Assignee, Due Date, Created, Description, Attachments |
-| Status badge         | `status-badge`         | span     | Shows current status (e.g. "Draft"); CSS class `badge--draft`, `badge--pending`, `badge--approved`, `badge--rejected`, `badge--locked` |
-| Lock icon            | `record-lock-icon`     | span     | Visible when record is locked (🔒); initially has class `hidden` |
-| Activity log         | `activity-log`         | div      | Timeline of record events in the right sidebar  |
+| Element             | `data-testid`      | Type     | Notes                                                                                                                                  |
+| ------------------- | ------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Record summary card | `record-summary`   | div.card | Contains Title, Type, Priority, Assignee, Due Date, Created, Description, Attachments                                                  |
+| Status badge        | `status-badge`     | span     | Shows current status (e.g. "Draft"); CSS class `badge--draft`, `badge--pending`, `badge--approved`, `badge--rejected`, `badge--locked` |
+| Lock icon           | `record-lock-icon` | span     | Visible when record is locked (🔒); initially has class `hidden`                                                                       |
+| Activity log        | `activity-log`     | div      | Timeline of record events in the right sidebar                                                                                         |
 
 ### Create New Record
 
@@ -196,15 +200,15 @@ Status text: "Showing 1-6 of 42 records".
 
 **Form fields**:
 
-| Field          | `data-testid`                   | Type       | Required | Notes                                                       |
-| -------------- | ------------------------------- | ---------- | -------- | ----------------------------------------------------------- |
-| Title          | `input-record-title`            | `text`     | Yes      | Placeholder: "Enter record title"                           |
-| Type           | `select-record-type`            | `select`   | Yes      | Options: Compliance, Infrastructure, HR Document, Policy, Technical |
-| Assignee       | `select-record-assignee`        | `select`   | No       | Options: Sarah Connor, Mike Chen, Emily Park, Alex Kim, Lisa Wong |
-| Priority       | `select-record-priority`        | `select`   | No       | Options: Low, Medium (default), High, Critical              |
-| Due Date       | `datepicker-record-due-date`    | `date`     | No       |                                                             |
-| Attachments    | `input-record-attachments`      | `file`     | No       | `multiple` attribute enabled                                |
-| Description    | `textarea-record-description`   | `textarea` | No       | Placeholder: "Describe the record…", 6 rows                 |
+| Field       | `data-testid`                 | Type       | Required | Notes                                                               |
+| ----------- | ----------------------------- | ---------- | -------- | ------------------------------------------------------------------- |
+| Title       | `input-record-title`          | `text`     | Yes      | Placeholder: "Enter record title"                                   |
+| Type        | `select-record-type`          | `select`   | Yes      | Options: Compliance, Infrastructure, HR Document, Policy, Technical |
+| Assignee    | `select-record-assignee`      | `select`   | No       | Options: Sarah Connor, Mike Chen, Emily Park, Alex Kim, Lisa Wong   |
+| Priority    | `select-record-priority`      | `select`   | No       | Options: Low, Medium (default), High, Critical                      |
+| Due Date    | `datepicker-record-due-date`  | `date`     | No       |                                                                     |
+| Attachments | `input-record-attachments`    | `file`     | No       | `multiple` attribute enabled                                        |
+| Description | `textarea-record-description` | `textarea` | No       | Placeholder: "Describe the record…", 6 rows                         |
 
 4. Click `[data-testid="btn-submit-record"]` (type: `submit`, label: "Submit").
 5. On success → redirects to `record-detail.html`; success toast appears.
@@ -255,7 +259,7 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 ### Approve a Record
 
 **Transition**: Pending Review → Approved  
-**Required role**: Reviewer or Admin
+**Required role**: Reviewer or Admin _(documented requirement; the current frontend does not enforce role-based access on this button — the button is visible to all logged-in users and role checks are informational only)_
 
 1. On the record detail page, click `[data-testid="btn-approve"]` (label: "✓ Approve").
 2. Approval dialog at `[data-testid="modal-approve"]` (id: `modal-approve`).
@@ -267,7 +271,7 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 ### Reject a Record
 
 **Transition**: Pending Review → Rejected  
-**Required role**: Reviewer or Admin
+**Required role**: Reviewer or Admin _(documented requirement; the current frontend does not enforce role-based access on this button — the button is visible to all logged-in users and role checks are informational only)_
 
 1. On the record detail page, click `[data-testid="btn-reject"]` (label: "✕ Reject").
 2. Rejection dialog at `[data-testid="modal-reject"]` (id: `modal-reject`).
@@ -279,7 +283,7 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 ### Lock a Record
 
 **Transition**: Approved → Locked  
-**Required role**: Admin
+**Required role**: Admin _(documented requirement; the current frontend does not enforce role-based access on this action — the Actions menu item is available to all logged-in users)_
 
 1. On the record detail page (status must be "Approved"), click `[data-testid="btn-actions-menu"]` (label: "Actions ▾").
 2. Select `[data-testid="action-lock-record"]` (label: "🔒 Lock Record").
@@ -292,7 +296,7 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 ### Unlock a Record
 
 **Transition**: Locked → Approved  
-**Required role**: Admin
+**Required role**: Admin _(documented requirement; the current frontend does not enforce role-based access on this action — the Actions menu item is available to all logged-in users)_
 
 1. On a Locked record detail page, click `[data-testid="btn-actions-menu"]`.
 2. Select `[data-testid="action-unlock-record"]` (label: "🔓 Unlock Record").
@@ -331,7 +335,9 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 
 ### Run a Report
 
-1. Click on a report card (e.g. "Monthly Compliance Summary") to reveal the report detail section (id: `report-detail-section`, initially `display:none`).
+1. Click a report card to reveal the report detail section (id: `report-detail-section`, initially `display:none`).
+   - **Currently interactive**: Only the **first card — "📊 Monthly Compliance Summary"** has an `onclick` handler wired in the current frontend. The remaining five cards (📈 Record Status Distribution, ⏱ Average Review Time, 👥 Assignee Workload, 📅 Due Date Compliance, 🔒 Locked Records Audit) render without an `onclick` handler and will not reveal the detail section when clicked.
+   - Selector: `.report-card` (CSS class), contained inside `[data-testid="reports-list"]`.
 2. Set date range via `[data-testid="report-date-from"]` (type: `date`, default: `2026-02-01`) and `[data-testid="report-date-to"]` (type: `date`, default: `2026-02-28`).
 3. Click `[data-testid="btn-run-report"]` (label: "▶ Run Report").
 4. Loading indicator: `[data-testid="report-loading"]` (initially `display:none`; shows spinner and "Generating report…").
@@ -398,7 +404,8 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 2. Notification dropdown opens at `[data-testid="notifications-panel"]`.
 3. Unread count badge at `[data-testid="notification-unread-count"]` (displays a number, e.g. `3`).
 4. Mark all read: click `[data-testid="btn-mark-all-read"]` (label: "Mark all read").
-5. Click an individual notification item (class: `notification-item`) to navigate to the relevant record (`record-detail.html`).
+5. Click an individual notification item (class: `notification-item`) to navigate to the relevant record.
+   - **Note**: In the current frontend, only the **first notification item** in `dashboard.html` has a click-to-navigate handler (`onclick="window.location.href='record-detail.html'"`). Other notification items in the panel do not have `onclick` handlers and will not navigate on click.
 
 ---
 
@@ -407,7 +414,7 @@ All workflow actions are performed on the **Record Detail page** (`record-detail
 ### Open Admin Panel
 
 **URL**: `http://localhost:8080/admin.html`  
-**Required role**: Admin
+**Required role**: Admin _(documented requirement; the current frontend does not enforce role checks on the Admin Panel link — any logged-in user can navigate to this page)_
 
 1. Navigate to `admin.html` via `[data-testid="nav-item-admin"]`.
 2. Two tabs: Users (default active) and Roles.

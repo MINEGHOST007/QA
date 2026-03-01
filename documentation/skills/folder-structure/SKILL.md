@@ -18,9 +18,6 @@ documentation/
 │   └── keywords/
 │       └── keywords_guide.md         # UI element definitions and Playwright selectors
 │
-├── memory/                           # Agent session memory (written during runs)
-│   └── (agent writes context here)
-│
 └── skills/                           # Progressive skill disclosure
     ├── folder-structure/
     │   └── SKILL.md                  # This file — explains the layout

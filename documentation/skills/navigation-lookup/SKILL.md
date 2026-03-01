@@ -47,11 +47,13 @@ read_doc_section('navigation/navigation_guide.md', <start>, <end>)
 
 For each found navigation path, extract and report:
 - **Starting URL** (where the user must be before step 1)
-- **Required role** (if mentioned)
+- **Required role** (if mentioned — see note below)
 - **Prerequisite status** (e.g., record must be "Approved")
 - **Each step** with the exact selector from the guide
 - **Resulting URL** after completing the navigation
 - **Side effects** visible to the test (status change, toast, redirect)
+- **Page-specific caveats**: some interactive behaviours are only wired on specific pages (e.g., only the first report card on `reports.html` has an `onclick` handler; only the first notification item in `dashboard.html` navigates on click). Always check the guide's caveat notes before assuming universal behaviour.
+- **Role enforcement caveat**: if a `Required role` is listed in the guide, note that the current frontend does **not** enforce role-based access at the UI level — the action is accessible to all logged-in users. The role annotation documents intended access control only.
 
 If not found:
 ```

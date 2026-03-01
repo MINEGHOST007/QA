@@ -1,0 +1,76 @@
+# Complex Test Case: Automated Record Provisioning & Workflow Validation
+
+This document provides two descriptions for a complex browser automation test case designed for the Records Management System (Demo Frontend). The test validates human-in-the-loop authentication, dynamic data fetching via API, complex form interactions, multi-step workflow actions, and strict assertion of success states using UI icons.
+
+---
+
+## 1. Natural Language (NL) Prompt
+
+**Objective:** Fill out a new record form using external data and verify its workflow progression.
+
+**Prompt to give the Agent:**  
+"Navigate to the records management login page at `http://localhost:8080/login.html`. Ask me for the admin credentials and use them to log in. Once on the dashboard, fetch external record data by making a GET request to `http://localhost:8080/data.json`.
+Navigate to the New Record form and fill it out completely using the data you just fetched. Submit the form, then immediately click 'Submit for Review' on the resulting detail page, and finally click 'Approve'. At each submission step, check the resulting toast notification — the test case should ONLY pass if you detect the success icon (`✓`) inside the toast. If you see an error icon (`✕`) or the success icon is missing, fail the test."
+
+---
+
+## 2. Detailed Step-by-Step Process
+
+### Pre-Condition
+*   The demo frontend HTTP server is running on `http://localhost:8080`.
+*   The API endpoint `http://localhost:8080/data.json` is accessible and returns valid JSON data (e.g., `{"title": "...", "type": "...", "priority": "...", "description": "..."}`).
+
+### Execution Steps
+
+1.  **Initialize Browser & Navigate**
+    *   Action: Open a Chromium browser instance.
+    *   Action: Navigate to `http://localhost:8080/login.html`.
+    *   Wait State: Wait for `#input-username` and `#input-password` to be visible.
+
+2.  **Human-in-the-Loop Authentication**
+    *   Action: Trigger a console prompt / tool call to ask the user: *"Please provide the admin username and password."*
+    *   Action: Receive the credentials (e.g., `admin` / `admin123`).
+    *   Action: Type the username into `#input-username`.
+    *   Action: Type the password into `#input-password`.
+    *   Action: Click the "Sign In" button (`button:has-text("Sign In")`).
+    *   Assertion: Wait for navigation to [dashboard.html](file:///c:/Users/Lenovo/OneDrive/Desktop/QA/demo-frontend/dashboard.html). Check for the presence of the dashboard stats grid to verify successful login.
+
+3.  **Fetch External Data**
+    *   Action: Using Playwright's `APIRequestContext` (or a native `fetch` call evaluated in the browser context), make a `GET` request to `http://localhost:8080/data.json`.
+    *   Action: Parse the JSON response and store it in memory.
+        *   *Expected structure:* `title`, `type`, `priority`, `description`.
+
+4.  **Navigate to Record Creation**
+    *   Action: Click the "Records" link in the sidebar (`[data-testid="nav-item-records"]`).
+    *   Action: Click the "+ New Record" button (`[data-testid="btn-new-record"]`).
+    *   Wait State: Wait for `#record-form` to be visible.
+
+5.  **Dynamic Form Population**
+    *   Action: Fill `#input-record-title` with the fetched `title`.
+    *   Action: Select the matching `<option>` in `#select-record-type` based on the fetched `type`.
+    *   Action: Select the matching `<option>` in `#select-record-priority` based on the fetched `priority`.
+    *   Action: Fill `#textarea-record-description` with the fetched `description`.
+    *   Action: Click the "Submit" button (`[data-testid="btn-submit-record"]`).
+
+6.  **Verify Creation Success (Icon Check)**
+    *   Action: Wait for the toast notification container (`.toast`).
+    *   Assertion: Extract the text from the toast span. Verify it exactly matches the success icon (`✓`). 
+        *   *Pass condition:* Toast contains `✓`.
+        *   *Fail condition:* Toast contains `✕` (error) or `⚠` (warning), or the `✓` is missing.
+
+7.  **Execute Workflow Action 1: Submit for Review**
+    *   Wait State: Wait for automatic redirect to [record-detail.html](file:///c:/Users/Lenovo/OneDrive/Desktop/QA/demo-frontend/record-detail.html).
+    *   Action: Click the "Submit for Review" button (`button:has-text("Submit for Review")`).
+    *   Action: In the modal that appears, type "Automated submission" into the comment field.
+    *   Action: Click the "Confirm Submit" button within the modal.
+    *   Assertion: Wait for the toast notification and verify the `✓` icon is present.
+
+8.  **Execute Workflow Action 2: Approve**
+    *   Action: Wait for the modal to close and the status badge to update to "Pending Review".
+    *   Action: Click the "Approve" button (`button:has-text("Approve")`).
+    *   Action: In the modal, leave the note blank and click "Confirm Approve".
+    *   Assertion: Wait for the toast notification and verify the `✓` icon is present. Verify the status badge icon text updates to "Approved".
+
+### Post-Condition
+*   The test script exits with a `PASS` status, confirming successful E2E creation and workflow approval.
+*   Browser instance is closed.

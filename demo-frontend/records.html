@@ -145,7 +145,7 @@
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="records-tbody">
               <tr data-testid="records-table-row" onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
                 <td><strong>Q4 Financial Review</strong></td>
                 <td>Compliance</td>
@@ -234,14 +234,14 @@
 
           <!-- Pagination -->
           <div class="pagination-controls" data-testid="pagination-controls">
-            <span>Showing 1-6 of 42 records</span>
+            <span id="records-pagination-info">Showing 1-6 of 42 records</span>
             <div style="display:flex;align-items:center;gap:var(--space-md);">
               <select class="form-select" data-testid="select-page-size" style="width:auto;padding:6px 32px 6px 10px;">
                 <option>10 / page</option>
                 <option>25 / page</option>
                 <option>50 / page</option>
               </select>
-              <div class="pagination-pages">
+              <div class="pagination-pages" id="records-pagination-pages">
                 <button class="page-btn" data-testid="btn-page-prev" disabled>←</button>
                 <button class="page-btn active">1</button>
                 <button class="page-btn">2</button>
@@ -264,6 +264,7 @@
     </div>
   </div>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

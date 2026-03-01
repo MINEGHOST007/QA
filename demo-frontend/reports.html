@@ -132,7 +132,7 @@
 
             <!-- Results -->
             <div id="report-results" data-testid="report-results" style="display:none;">
-              <div class="stats-grid" style="margin-bottom:var(--space-lg);">
+              <div id="report-stats" class="stats-grid" style="margin-bottom:var(--space-lg);">
                 <div class="card stat-card stat-green" style="padding:var(--space-md);">
                   <div class="stat-label">Compliant</div>
                   <div class="stat-value" style="font-size:var(--font-size-xl);">87%</div>
@@ -156,7 +156,7 @@
                       <th>Due Date</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="report-results-tbody">
                     <tr><td>Q4 Financial Review</td><td><span class="badge badge--pending">Pending</span></td><td><span style="color:var(--warning);">Pending Review</span></td><td>Mar 15, 2026</td></tr>
                     <tr><td>Server Migration Plan</td><td><span class="badge badge--approved">Approved</span></td><td><span style="color:var(--success);">Compliant</span></td><td>Mar 22, 2026</td></tr>
                     <tr><td>Data Retention Policy</td><td><span class="badge badge--locked">Locked</span></td><td><span style="color:var(--success);">Compliant</span></td><td>Feb 28, 2026</td></tr>
@@ -178,6 +178,7 @@
     </div>
   </div>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

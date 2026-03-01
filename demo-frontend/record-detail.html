@@ -61,11 +61,11 @@
         <div class="page-header">
           <div>
             <div style="display:flex; align-items:center; gap:var(--space-md); margin-bottom:var(--space-sm);">
-              <h1>Q4 Financial Review</h1>
+              <h1 id="record-detail-title">Q4 Financial Review</h1>
               <span id="status-badge" data-testid="status-badge" class="badge badge--draft" role="status">Draft</span>
               <span id="record-lock-icon" data-testid="record-lock-icon" class="hidden">🔒</span>
             </div>
-            <p style="color:var(--text-secondary); font-size:var(--font-size-sm);">Record #1042 • Created by John Doe on Feb 25, 2026</p>
+            <p id="record-detail-meta" style="color:var(--text-secondary); font-size:var(--font-size-sm);">Record #1042 • Created by John Doe on Feb 25, 2026</p>
           </div>
           <div class="page-header-actions" style="gap:var(--space-sm);">
             <!-- Workflow Buttons -->
@@ -95,6 +95,7 @@
               <div class="card-header">
                 <h3 class="card-title">Record Details</h3>
               </div>
+              <div id="record-summary-fields">
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-lg);">
                 <div class="detail-field">
                   <div class="detail-field-label">Title</div>
@@ -137,6 +138,7 @@
                   </div>
                 </div>
               </div>
+              </div>
             </div>
           </div>
 
@@ -146,7 +148,7 @@
               <div class="card-header">
                 <h3 class="card-title">Activity Log</h3>
               </div>
-              <div class="activity-log" data-testid="activity-log">
+              <div class="activity-log" id="record-activity-log" data-testid="activity-log">
                 <div class="log-entry">
                   <span class="log-dot created"></span>
                   <div>
@@ -309,6 +311,7 @@
     </div>
   </div>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

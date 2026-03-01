@@ -132,7 +132,7 @@
         </div>
 
         <!-- Stats -->
-        <div class="stats-grid">
+        <div class="stats-grid" id="dashboard-stats">
           <div class="card stat-card stat-purple">
             <div class="stat-label">Total Records</div>
             <div class="stat-value">1,247</div>
@@ -172,7 +172,7 @@
                   <th>Last Updated</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="dashboard-activity-tbody">
                 <tr onclick="window.location.href='record-detail.html'" style="cursor:pointer;">
                   <td><strong>Q4 Financial Review</strong></td>
                   <td>Compliance</td>
@@ -216,6 +216,7 @@
     </div>
   </div>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

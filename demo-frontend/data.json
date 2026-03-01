@@ -1,0 +1,6 @@
+{
+  "title": "Automated Security Vulnerability Assessment",
+  "type": "technical",
+  "priority": "critical",
+  "description": "Automated record created from API data fetch to verify deep linking and workflow assignment capabilities during the Q1 security audit."
+}

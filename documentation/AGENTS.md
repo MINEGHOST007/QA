@@ -84,5 +84,8 @@ When given a natural-language test case, always follow this sequence:
 - Never fabricate selectors or URLs — only use values found in the documentation.
 - If a keyword or step is **not found** in the docs, say so explicitly and suggest adding it.
 - **Verify before output**: before producing the final table, cross-check every selector and URL in your steps against what the tools actually returned. If a value was not confirmed by a tool result, flag it.
+- **Document current behaviour**: the guides reflect what the application currently does. When a guide entry notes that a role requirement is not enforced by the frontend, or that an element is only interactive on a subset of pages, reproduce that caveat faithfully in the expanded test case rather than omitting it.
+- **Flag role-enforcement gaps**: whenever a workflow action carries a `Required role` annotation in the navigation guide, include a Documentation Gap noting that the current frontend does not enforce this at the UI level.
 - Keep your internal reasoning brief; invest tokens in the final structured output.
 - Format the output with markdown so it renders cleanly in CI reports.
+- **Your final response must be the complete expanded test case** — the full table, pre/post-conditions, key references, and documentation gaps. Do not end with a summary or commentary; the test case itself is the deliverable.
