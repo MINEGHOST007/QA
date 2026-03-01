@@ -58,6 +58,27 @@ def _get_script_files() -> list[Path]:
     return sorted(SCRIPTS_DIR.rglob("*.py"))
 
 
+def _normalize_script_path(script_path: str) -> str:
+    """Normalize script path input from tools/LLM.
+
+    Accepts values like:
+      - "test_login.py"
+      - "scripts/test_login.py"
+      - "scripts\\test_login.py"
+    and normalizes to a path relative to scripts/.
+    """
+    p = (script_path or "").strip().replace("\\", "/")
+    if p.startswith("scripts/"):
+        p = p[len("scripts/"):]
+    return p.strip("/")
+
+
+def _resolve_script_path(script_path: str) -> Path:
+    """Resolve a script path to a filesystem path under scripts/."""
+    normalized = _normalize_script_path(script_path)
+    return SCRIPTS_DIR / normalized
+
+
 # ---------------------------------------------------------------------------
 # TF-IDF implementation (stdlib only — no sklearn/numpy needed)
 # ---------------------------------------------------------------------------
@@ -349,16 +370,17 @@ def get_script_outline(script_path: str) -> str:
     Args:
         script_path: Path relative to scripts/, e.g. "test_login.py" or "auth/test_sso.py".
     """
-    full = SCRIPTS_DIR / script_path
+    normalized = _normalize_script_path(script_path)
+    full = _resolve_script_path(script_path)
     if not full.exists():
-        return f"Script not found: scripts/{script_path}. Use list_scripts() to see available files."
+        return f"Script not found: scripts/{normalized}. Use list_scripts() to see available files."
     if full.is_dir():
         return "Provide a file path, not a directory. Use list_scripts() to see available files."
 
     try:
         lines = full.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
-        return f"Error reading scripts/{script_path}: {exc}"
+        return f"Error reading scripts/{normalized}: {exc}"
 
     outline: list[str] = []
     for i, line in enumerate(lines, 1):
@@ -371,9 +393,9 @@ def get_script_outline(script_path: str) -> str:
             outline.append(f"  L{i:4d}: {stripped}")
 
     if not outline:
-        return f"No class/method definitions found in scripts/{script_path}."
+        return f"No class/method definitions found in scripts/{normalized}."
 
-    return f"Outline of scripts/{script_path} ({len(lines)} lines):\n" + "\n".join(outline)
+    return f"Outline of scripts/{normalized} ({len(lines)} lines):\n" + "\n".join(outline)
 
 
 @tool
@@ -388,14 +410,15 @@ def read_script(script_path: str, start_line: int = 1, end_line: int = 0) -> str
         start_line:  First line to read (1-based, inclusive). Default: 1.
         end_line:    Last line to read (1-based, inclusive). 0 = entire file.
     """
-    full = SCRIPTS_DIR / script_path
+    normalized = _normalize_script_path(script_path)
+    full = _resolve_script_path(script_path)
     if not full.exists():
-        return f"Script not found: scripts/{script_path}. Use list_scripts() to see available files."
+        return f"Script not found: scripts/{normalized}. Use list_scripts() to see available files."
 
     try:
         lines = full.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
-        return f"Error reading scripts/{script_path}: {exc}"
+        return f"Error reading scripts/{normalized}: {exc}"
 
     total = len(lines)
     if end_line <= 0:
@@ -421,10 +444,10 @@ def read_script(script_path: str, start_line: int = 1, end_line: int = 0) -> str
             collected.append(f"{i:4d}: {line}")
 
     if not collected:
-        return f"No content in range L{start_line}-L{end_line} of scripts/{script_path}."
+        return f"No content in range L{start_line}-L{end_line} of scripts/{normalized}."
 
     return (
-        f"scripts/{script_path}  (L{start_line}–L{end_line} of {total}):\n"
+        f"scripts/{normalized}  (L{start_line}–L{end_line} of {total}):\n"
         + "\n".join(collected)
         + clamp_note
     )
@@ -456,9 +479,10 @@ def grep_scripts(
         context_lines: Lines of context above/below each match (1–8, default 3).
     """
     if script_path:
-        full = SCRIPTS_DIR / script_path
+        normalized = _normalize_script_path(script_path)
+        full = _resolve_script_path(script_path)
         if not full.exists():
-            return f"Script not found: scripts/{script_path}. Use list_scripts() to see available files."
+            return f"Script not found: scripts/{normalized}. Use list_scripts() to see available files."
         search_root = full
     else:
         if not SCRIPTS_DIR.exists():

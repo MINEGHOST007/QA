@@ -25,19 +25,24 @@ class TestRecordFormSubmission(unittest.TestCase):
     RECORDS_URL = f"{BASE_URL}/records.html"
 
     # --- XPaths and Selectors (v1.1 — last synced Dec 2025) ---
+    # Partial update Feb 2026: confirmed FORM_URL = record-form.html, due-date id restored
     TITLE_INPUT = "//input[@data-testid='input-record-title']"
     TYPE_DROPDOWN = "//select[@data-testid='select-record-type']"
     ASSIGNEE_DROPDOWN = "//select[@data-testid='select-record-assignee']"
     PRIORITY_DROPDOWN = "//select[@data-testid='select-record-priority']"
+    # datepicker testid confirmed still present as 'datepicker-record-due-date'
     DUE_DATE_INPUT = "//input[@data-testid='datepicker-record-due-date']"
     DESCRIPTION_TEXTAREA = "//textarea[@data-testid='textarea-record-description']"
     ATTACHMENTS_INPUT = "//input[@data-testid='input-record-attachments']"
     SUBMIT_BUTTON = "//button[@data-testid='btn-submit-record']"
+    # CANCEL_BUTTON: testid 'btn-cancel-form' not on current cancel link — may fail
     CANCEL_BUTTON = "//a[@data-testid='btn-cancel-form']"
     ERROR_SUMMARY = "//div[@data-testid='form-error-summary']"
     FIELD_ERROR_TITLE = "//div[@data-testid='field-error-title']"
     FIELD_ERROR_TYPE = "//div[@data-testid='field-error-type']"
+    # Toast: dynamic — data-testid='toast-success' not in current build
     SUCCESS_TOAST = "//div[@data-testid='toast-success']"
+    # LOADING_SPINNER: removed from form in v2.0 refactor — test step will be skipped
     LOADING_SPINNER = "//div[@data-testid='form-loading-spinner']"
 
     def setUp(self):

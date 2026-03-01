@@ -361,8 +361,16 @@ Examples:
     # -----------------------------------------------------------------------
     raw_input = args.testcase
     has_expanded = any(marker in raw_input for marker in [
-        "### Steps", "### Pre-conditions", "Locator / Selector",
-        "data-testid", "### Key References",
+        "## Expanded Test Plan",
+        "### Steps",
+        "### Pre-conditions",
+        "Structured Test Plan",
+        "Locator / Selector",
+        "URL/Location",
+        "Success Criteria",
+        "data-testid",
+        "### Key References",
+        "### Test Execution Notes",
     ])
 
     console.print()

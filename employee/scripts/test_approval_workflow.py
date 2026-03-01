@@ -31,6 +31,8 @@ class TestApprovalWorkflow(unittest.TestCase):
     ACTIVITY_LOG_ENTRIES = "//div[@data-testid='activity-log']//div[@class='log-entry']"
 
     # Modal selectors (some may be from older version)
+    # NOTE Feb 2026: modal-submit-review div uses data-testid='modal-confirm' in current
+    # HTML, not 'modal-submit-review' — this selector will likely fail; update pending
     SUBMIT_REVIEW_MODAL = "//div[@data-testid='modal-submit-review']"
     WORKFLOW_COMMENT = "//textarea[@data-testid='input-workflow-comment']"
     CONFIRM_WORKFLOW_BTN = "//button[@data-testid='btn-confirm-workflow']"
@@ -45,7 +47,8 @@ class TestApprovalWorkflow(unittest.TestCase):
     TOAST_SUCCESS = "//div[@data-testid='toast-success']"
     TOAST_ERROR = "//div[@data-testid='toast-error']"
 
-    # Old notification selectors — may not match current UI
+    # Old notification selectors — confirmed stale; current build uses
+    # data-testid='btn-notifications' and data-testid='notifications-panel'
     NOTIFICATION_BELL = "//button[@data-testid='notification-bell']"
     NOTIFICATION_DROPDOWN = "//div[@data-testid='notification-dropdown']"
 

@@ -23,7 +23,70 @@
     ],
     "xpath_count": 24,
     "css_selector_count": 0,
-    "line_count": 186
+    "line_count": 189
+  },
+  {
+    "filename": "test_automated_record_provisioning.py",
+    "class_names": [
+      "TestAutomatedRecordProvisioning"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_fetch_record_data",
+      "_login",
+      "_assert_success_toast",
+      "test_api_data_endpoint_reachable",
+      "test_full_provisioning_and_approval_workflow",
+      "test_provisioning_with_missing_api_key",
+      "test_reject_workflow_after_submission"
+    ],
+    "docstring": "Test Automated Record Provisioning — Selenium regression test for end-to-end\nrecord creation using external API data, followed by full approval workflow.\n\nCovers:\n  - Fetch record payload from external data endpoint\n  - Auto-populate new record form from fetched data\n  - Submit form and assert success notification\n  - Execute Submit for Review workflow step\n  - Execute Approve workflow step\n  - Status badge assertions at each stage\n\nNOTE: This script was written against the v1.5 provisioning flo",
+    "imports": [
+      "time",
+      "unittest",
+      "requests",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 36,
+    "css_selector_count": 0,
+    "line_count": 367
+  },
+  {
+    "filename": "test_dashboard_stats.py",
+    "class_names": [
+      "TestDashboardStats"
+    ],
+    "method_names": [
+      "setUp",
+      "tearDown",
+      "_login",
+      "test_dashboard_page_loads",
+      "test_stats_grid_visible",
+      "test_stat_cards_contain_numeric_values",
+      "test_recent_activity_table_renders_rows",
+      "test_notification_badge_shows_count",
+      "test_notifications_panel_opens_on_click",
+      "test_user_menu_shows_name_and_role",
+      "test_sidebar_records_link_navigates",
+      "test_sidebar_reports_link_navigates",
+      "test_new_record_shortcut_present",
+      "test_logout_from_user_menu"
+    ],
+    "docstring": "Test Dashboard Stats — Selenium regression test for the dashboard landing page.\n\nCovers:\n  - Dashboard page loads after successful login\n  - Statistics cards are visible with numeric values\n  - Recent activity table renders rows\n  - Notification badge displays unread count\n  - Sidebar navigation links work correctly\n  - User menu dropdown shows logged-in user name\n  - Quick 'New Record' action button present\n\nNote: Stat card testids were defined in the original component spec.\nSome may not be pr",
+    "imports": [
+      "unittest",
+      "selenium",
+      "selenium.webdriver.common.by",
+      "selenium.webdriver.support.ui",
+      "selenium.webdriver.support"
+    ],
+    "xpath_count": 23,
+    "css_selector_count": 1,
+    "line_count": 314
   },
   {
     "filename": "test_export_report.py",
@@ -79,7 +142,7 @@
     ],
     "xpath_count": 23,
     "css_selector_count": 0,
-    "line_count": 188
+    "line_count": 193
   },
   {
     "filename": "test_login.py",
@@ -106,7 +169,7 @@
     ],
     "xpath_count": 16,
     "css_selector_count": 0,
-    "line_count": 162
+    "line_count": 167
   },
   {
     "filename": "test_record_locking.py",

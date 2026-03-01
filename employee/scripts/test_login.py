@@ -24,12 +24,15 @@ class TestLoginPage(unittest.TestCase):
     LOGIN_URL = f"{BASE_URL}/login.html"
 
     # --- XPaths and Selectors (v1.2 — last updated Jan 2026) ---
+    # NOTE: synced URL base for v2.4.1 frontend (Feb 2026) — selectors below unchanged
     USERNAME_INPUT = "//input[@data-testid='input-username']"
     PASSWORD_INPUT = "//input[@data-testid='input-password']"
     LOGIN_BUTTON = "//button[@data-testid='btn-login']"
+    # REMEMBER_ME_CHECKBOX — removed from login form in v2.1; kept for reference
     REMEMBER_ME_CHECKBOX = "//input[@data-testid='checkbox-remember-me']"
     FORGOT_PASSWORD_LINK = "//a[@data-testid='link-forgot-password']"
     ERROR_MESSAGE = "//div[@data-testid='alert-login-error']"
+    # SUCCESS_TOAST: static testid div no longer emitted; toast is dynamic — may fail
     SUCCESS_TOAST = "//div[@data-testid='toast-success']"
     DASHBOARD_HEADER = "//h1[text()='Dashboard']"
 
@@ -116,6 +119,8 @@ class TestLoginPage(unittest.TestCase):
 
     def test_remember_me_checkbox(self):
         """Test remember me functionality persists session.
+        NOTE: 'Remember Me' checkbox was removed from login.html in v2.1.
+        This test will fail on current build — kept for historical reference.
 
         Steps:
         1. Navigate to login page
