@@ -1,0 +1,131 @@
+Let me first look at your project to understand the problem statement, so I can craft a highly targeted Confluence research prompt.
+
+Viewed Final_Solution.md:1-463
+Listed directory ibm_mq
+
+Now I have a thorough understanding of your hackathon problem statement. Here's a comprehensive, copy-paste-ready prompt you can use to systematically mine your Confluence page for IBM MQ information:
+
+---
+
+## 🔍 Confluence Deep-Dive Prompt — IBM MQ Topology Research
+
+Use this prompt as a **checklist** when going through the Confluence page, its sub-tabs, sub-links, attached documents, and embedded diagrams:
+
+---
+
+### 1. Current Topology & Infrastructure Inventory
+
+- [ ] **List of all Queue Managers (QMs)** — names, regions/data centers, versions (e.g., MQ 9.x)
+- [ ] **Queue Manager to Application mapping** — which apps connect to which QMs? Is it 1:1 or 1:many?
+- [ ] **Total number of applications** using MQ, and their names/IDs
+- [ ] **Channel definitions** — how many channels exist today? Are they point-to-point? Any shared/clustered channels?
+- [ ] **Channel naming conventions** — is there an existing standard (e.g., `fromQM.toQM`)? Any documentation on naming policies?
+- [ ] **Queue definitions** — local queues, remote queues, alias queues, transmission queues (XMITQs). Get counts and naming patterns.
+- [ ] **MQ Cluster definitions** — are any QMs already grouped into IBM MQ Clusters? If so, which ones and why?
+
+---
+
+### 2. Message Flow & Traffic Patterns
+
+- [ ] **Application flow diagrams** — any diagrams showing who sends (PUT) to whom (GET)?
+- [ ] **High-volume flows** — which producer→consumer paths carry the most traffic?
+- [ ] **Critical/priority flows** — any SLAs, latency requirements, or business-critical paths explicitly called out?
+- [ ] **Fan-in / Fan-out patterns** — any documentation noting QMs or queues with unusually high connections?
+- [ ] **Message routing rules** — is there any multi-hop routing today? Are there gateway/hub QMs already being used?
+- [ ] **Dead letter queues (DLQ) usage** — how are undeliverable messages handled?
+
+---
+
+### 3. Architecture & Design Patterns
+
+- [ ] **Existing topology diagrams** — take screenshots of any architecture/topology images. Look for:
+  - Point-to-point vs. hub-spoke vs. clustered patterns
+  - Regional vs. cross-region connectivity
+  - DMZ/firewall traversal patterns (MQ Internet Gateway, etc.)
+- [ ] **Hub/Gateway QMs** — are any QMs already designated as hubs or gateways? If so, what's the logic behind that?
+- [ ] **Transmission queue strategy** — is there one XMITQ per target QM, or shared XMITQs?
+- [ ] **Clustering strategy** — if MQ clusters exist, what's the rationale? Workload balancing? HA?
+- [ ] **High Availability (HA) setup** — Multi-instance QMs? RDQM? Active-passive?
+
+---
+
+### 4. Pain Points & Known Issues (Gold for your solution narrative)
+
+- [ ] **Channel sprawl complaints** — any documented issues about too many channels?
+- [ ] **QM sprawl** — complaints about too many QMs or apps connecting to multiple QMs?
+- [ ] **Operational incidents** — any post-mortems or incident reports related to MQ complexity?
+- [ ] **Onboarding friction** — documentation about how long it takes to onboard a new app onto MQ
+- [ ] **Manual provisioning steps** — screenshots or docs showing manual MQSC commands, runbooks
+- [ ] **Cycle/loop issues** — any known routing loops or circular dependencies?
+- [ ] **Unused/orphan objects** — any cleanup initiatives? Lists of unused queues/channels?
+
+---
+
+### 5. Governance & Standards
+
+- [ ] **MQ standards/policies document** — naming conventions, security policies, TLS requirements
+- [ ] **Change management process** — how are MQ changes (new channels, queues) requested and approved?
+- [ ] **Ownership model** — who owns which QMs/queues? App teams or middleware team?
+- [ ] **Environment tiers** — DEV/SIT/UAT/PROD — how does topology differ across environments?
+- [ ] **Automation already in place** — any Ansible playbooks, Terraform, or MQ scripts for provisioning?
+
+---
+
+### 6. Data You Need to Extract (or Approximate) for Your CSV Inputs
+
+Your solution requires 4 CSV files. Map Confluence data to these:
+
+| Your CSV | What to look for on Confluence |
+|---|---|
+| **queue_managers.csv** (`QM_ID`, `QM_Name`, `Region`) | QM inventory lists, infra diagrams with QM names + data center/region labels |
+| **queues.csv** (`Queue_Name`, `Queue_Type`, `Owning_QM`) | Queue object listings, MQSC output dumps, queue definition tables |
+| **applications.csv** (`App_ID`, `App_Name`, `Connected_QM`) | Application catalog, app-to-QM mapping tables, architecture diagrams |
+| **flows.csv** (`App_ID`, `Queue_Name`, `Role [PUT/GET]`) | Message flow diagrams, producer/consumer documentation, integration matrices |
+
+---
+
+### 7. Scale & Metrics (for realistic benchmarking)
+
+- [ ] **Total QM count** across the enterprise
+- [ ] **Total channel count** (sender + receiver pairs)
+- [ ] **Total queue count** by type
+- [ ] **Total application count** connected to MQ
+- [ ] **Message volumes** — daily/hourly throughput numbers if available
+- [ ] **Average and max routing hops** for messages today
+- [ ] **Any existing complexity metrics** — if the enterprise already measures MQ complexity somehow
+
+---
+
+### 8. Where to Look (Don't Miss These)
+
+- **Sub-pages/child pages** under the main MQ Confluence space
+- **Attached files** — Excel sheets, Visio diagrams, PDFs, MQSC scripts
+- **Labels/tags** — search for tags like `mq`, `messaging`, `integration`, `middleware`
+- **Comments section** — often contains real pain-point discussions from engineers
+- **"Related pages" links** — Confluence often links to architecture review boards, incident reports
+- **Table of contents macro** — expand every section, some may be collapsed by default
+- **Embedded Jira tickets** — often linked to change requests or incidents
+- **Version history** — older versions may show how the topology has evolved (useful for "organic growth" narrative)
+
+---
+
+### 🎯 Priority: What's Most Valuable for Your Hackathon
+
+**Tier 1 (Must-have):**
+1. Actual QM names, regions, and app mappings → proves your solution works on real data
+2. Pain points in their own words → direct quotes strengthen your problem narrative
+3. Topology diagrams → proves the "organically grown, dense mesh" problem exists
+
+**Tier 2 (High impact):**
+4. Channel/queue counts → lets you show real-world % reduction numbers
+5. Existing naming conventions → shows your solution respects enterprise standards
+6. Onboarding process friction → directly maps to your "automation-ready" selling point
+
+**Tier 3 (Nice-to-have):**
+7. HA/clustering strategy → shows you understand enterprise constraints
+8. Message volumes → enables traffic-weighted optimization
+9. Governance processes → shows your solution fits into their change management
+
+---
+
+Copy this checklist and check off items as you navigate through each Confluence page, sub-link, and attachment. Any real-world data points or direct quotes you capture will directly strengthen your solution's **"Enterprise Realism"** scoring criterion.
