@@ -1,131 +1,216 @@
-Let me first look at your project to understand the problem statement, so I can craft a highly targeted Confluence research prompt.
-
-Viewed Final_Solution.md:1-463
-Listed directory ibm_mq
-
-Now I have a thorough understanding of your hackathon problem statement. Here's a comprehensive, copy-paste-ready prompt you can use to systematically mine your Confluence page for IBM MQ information:
+This is excellent — you've hit the macro-level data. Now you need to go **surgical**. Here's your **Round 2 Deep-Dive Prompt** designed to squeeze out the granular, demo-worthy details from every corner of those Confluence pages:
 
 ---
 
-## 🔍 Confluence Deep-Dive Prompt — IBM MQ Topology Research
+## 🔬 Round 2: Confluence Surgical Deep-Dive Prompt
 
-Use this prompt as a **checklist** when going through the Confluence page, its sub-tabs, sub-links, attached documents, and embedded diagrams:
-
----
-
-### 1. Current Topology & Infrastructure Inventory
-
-- [ ] **List of all Queue Managers (QMs)** — names, regions/data centers, versions (e.g., MQ 9.x)
-- [ ] **Queue Manager to Application mapping** — which apps connect to which QMs? Is it 1:1 or 1:many?
-- [ ] **Total number of applications** using MQ, and their names/IDs
-- [ ] **Channel definitions** — how many channels exist today? Are they point-to-point? Any shared/clustered channels?
-- [ ] **Channel naming conventions** — is there an existing standard (e.g., `fromQM.toQM`)? Any documentation on naming policies?
-- [ ] **Queue definitions** — local queues, remote queues, alias queues, transmission queues (XMITQs). Get counts and naming patterns.
-- [ ] **MQ Cluster definitions** — are any QMs already grouped into IBM MQ Clusters? If so, which ones and why?
+> **Instructions:** For EVERY question below, try to answer it from **at least 3 different sources** within Confluence: (1) the main page text, (2) attached files/exports, (3) child/linked pages, (4) embedded dashboards/Grafana, (5) comments/discussions, (6) page version history. If a question has no answer anywhere, note it as a **gap** — gaps are valuable too because they validate the "lack of observability" pain point.
 
 ---
 
-### 2. Message Flow & Traffic Patterns
+### 🔎 SECTION A: Queue Manager Deep-Dive (Target: `queue_managers.csv`)
 
-- [ ] **Application flow diagrams** — any diagrams showing who sends (PUT) to whom (GET)?
-- [ ] **High-volume flows** — which producer→consumer paths carry the most traffic?
-- [ ] **Critical/priority flows** — any SLAs, latency requirements, or business-critical paths explicitly called out?
-- [ ] **Fan-in / Fan-out patterns** — any documentation noting QMs or queues with unusually high connections?
-- [ ] **Message routing rules** — is there any multi-hop routing today? Are there gateway/hub QMs already being used?
-- [ ] **Dead letter queues (DLQ) usage** — how are undeliverable messages handled?
+**Go to: Metrics - Delivery Plan (3689452015) + MQ Appliances Architecture (3893366577) + MQ Inventory (3479846400)**
 
----
+1. **QM naming taxonomy** — What is the full naming convention breakdown?
+   - Try from: Architecture doc → naming conventions section
+   - Try from: Inventory dashboards → filter by QM name, look for patterns
+   - Try from: Config Summary (3992421669) → the 6 analyzed QMs
+   - *What you need:* A regex-like pattern, e.g. `P[A-Z]{2}[0-9]{2}[B]?` = Prod, `PLG` prefix = what?, `PAX` = what?
 
-### 3. Architecture & Design Patterns
+2. **QM-to-datacenter mapping** — Which specific QMs are in Garland vs Lewisville vs Manassas vs Sterling?
+   - Try from: Architecture doc → topology diagrams per data center
+   - Try from: Grafana dashboards → filter/group by region
+   - Try from: Appliance inventory → which appliances host which QMs, and appliances are datacenter-assigned
+   - *What you need:* At least 20-30 real QM names with their datacenter/region for your CSV
 
-- [ ] **Existing topology diagrams** — take screenshots of any architecture/topology images. Look for:
-  - Point-to-point vs. hub-spoke vs. clustered patterns
-  - Regional vs. cross-region connectivity
-  - DMZ/firewall traversal patterns (MQ Internet Gateway, etc.)
-- [ ] **Hub/Gateway QMs** — are any QMs already designated as hubs or gateways? If so, what's the logic behind that?
-- [ ] **Transmission queue strategy** — is there one XMITQ per target QM, or shared XMITQs?
-- [ ] **Clustering strategy** — if MQ clusters exist, what's the rationale? Workload balancing? HA?
-- [ ] **High Availability (HA) setup** — Multi-instance QMs? RDQM? Active-passive?
+3. **HA pairing** — For every QM, what is its HA pair?
+   - Try from: Architecture doc → HA/DR pairing strategy section
+   - Try from: Config Summary → PAX60/PAX60B pattern
+   - Try from: Inventory → look for paired entries
+   - *What you need:* Understanding if the `B-suffix` pattern is universal, and whether pairs are same-DC or cross-DC
 
----
+4. **QM-to-Appliance mapping** — How many QMs run per appliance?
+   - Try from: Architecture doc → appliance sizing section
+   - Try from: Metrics page → any capacity/density metrics
+   - *What you need:* Density ratio (QMs-per-appliance) to show scale awareness in your demo
 
-### 4. Pain Points & Known Issues (Gold for your solution narrative)
-
-- [ ] **Channel sprawl complaints** — any documented issues about too many channels?
-- [ ] **QM sprawl** — complaints about too many QMs or apps connecting to multiple QMs?
-- [ ] **Operational incidents** — any post-mortems or incident reports related to MQ complexity?
-- [ ] **Onboarding friction** — documentation about how long it takes to onboard a new app onto MQ
-- [ ] **Manual provisioning steps** — screenshots or docs showing manual MQSC commands, runbooks
-- [ ] **Cycle/loop issues** — any known routing loops or circular dependencies?
-- [ ] **Unused/orphan objects** — any cleanup initiatives? Lists of unused queues/channels?
+5. **Network Neighborhood assignment** — Which QMs are in N01 vs N02 vs N03 vs N04 vs N16?
+   - Try from: Architecture doc → network neighborhoods section
+   - Try from: Any network diagrams or firewall rules
+   - *What you need:* This is effectively a **pre-existing clustering** — if you can show your algorithm discovers similar clusters, it's a powerful validation
 
 ---
 
-### 5. Governance & Standards
+### 🔎 SECTION B: Channel & Connectivity Deep-Dive (Target: Channel complexity evidence)
 
-- [ ] **MQ standards/policies document** — naming conventions, security policies, TLS requirements
-- [ ] **Change management process** — how are MQ changes (new channels, queues) requested and approved?
-- [ ] **Ownership model** — who owns which QMs/queues? App teams or middleware team?
-- [ ] **Environment tiers** — DEV/SIT/UAT/PROD — how does topology differ across environments?
-- [ ] **Automation already in place** — any Ansible playbooks, Terraform, or MQ scripts for provisioning?
+**Go to: Config Summary (3992421669) + MQ Inventory (3479846400) + any linked runbooks**
 
----
+6. **Channel type breakdown** — Of the 63,252 channels, how many are:
+   - SDR/RCVR (point-to-point)?
+   - SVRCONN (client connections)?
+   - CLUSSDR/CLUSRCVR (cluster channels)?
+   - Try from: Metrics page → channel breakdown table
+   - Try from: Grafana → channel type filters
+   - Try from: Config Summary → the 6 QMs' channel listings
+   - *What you need:* The SDR/RCVR count specifically = your "point-to-point channel sprawl" number
 
-### 6. Data You Need to Extract (or Approximate) for Your CSV Inputs
+7. **Channel naming convention** — Is there a standard? `fromQM.toQM`? Something else?
+   - Try from: Config Summary → actual channel names listed
+   - Try from: Standards/governance pages linked from Architecture doc
+   - Try from: Any MQ team runbooks or provisioning guides
+   - *What you need:* Proof that your `fromQM.toQM` deterministic naming aligns with (or improves upon) their existing convention
 
-Your solution requires 4 CSV files. Map Confluence data to these:
+8. **Channels per QM distribution** — What's the max, min, average channel count per QM?
+   - Try from: Grafana dashboards → sort by channel count
+   - Try from: Metrics page → any distribution charts
+   - Try from: Config Summary → the 6 analyzed QMs as a sample
+   - *What you need:* Fan-in/fan-out evidence. If some QMs have 200+ channels while others have 5, that's the sprawl asymmetry your optimizer fixes
 
-| Your CSV | What to look for on Confluence |
-|---|---|
-| **queue_managers.csv** (`QM_ID`, `QM_Name`, `Region`) | QM inventory lists, infra diagrams with QM names + data center/region labels |
-| **queues.csv** (`Queue_Name`, `Queue_Type`, `Owning_QM`) | Queue object listings, MQSC output dumps, queue definition tables |
-| **applications.csv** (`App_ID`, `App_Name`, `Connected_QM`) | Application catalog, app-to-QM mapping tables, architecture diagrams |
-| **flows.csv** (`App_ID`, `Queue_Name`, `Role [PUT/GET]`) | Message flow diagrams, producer/consumer documentation, integration matrices |
+9. **Cross-datacenter channels** — How many channels cross between Sterling↔Garland, Sterling↔Lewisville, etc.?
+   - Try from: Architecture doc → cross-DC connectivity diagrams
+   - Try from: Network neighborhood docs → inter-neighborhood routing
+   - *What you need:* This maps directly to your "inter-cluster hub backbone" — real cross-DC channels = your MST edges
 
----
-
-### 7. Scale & Metrics (for realistic benchmarking)
-
-- [ ] **Total QM count** across the enterprise
-- [ ] **Total channel count** (sender + receiver pairs)
-- [ ] **Total queue count** by type
-- [ ] **Total application count** connected to MQ
-- [ ] **Message volumes** — daily/hourly throughput numbers if available
-- [ ] **Average and max routing hops** for messages today
-- [ ] **Any existing complexity metrics** — if the enterprise already measures MQ complexity somehow
-
----
-
-### 8. Where to Look (Don't Miss These)
-
-- **Sub-pages/child pages** under the main MQ Confluence space
-- **Attached files** — Excel sheets, Visio diagrams, PDFs, MQSC scripts
-- **Labels/tags** — search for tags like `mq`, `messaging`, `integration`, `middleware`
-- **Comments section** — often contains real pain-point discussions from engineers
-- **"Related pages" links** — Confluence often links to architecture review boards, incident reports
-- **Table of contents macro** — expand every section, some may be collapsed by default
-- **Embedded Jira tickets** — often linked to change requests or incidents
-- **Version history** — older versions may show how the topology has evolved (useful for "organic growth" narrative)
+10. **Security per channel** — TLS, CHLAUTH, CONNAUTH configurations?
+    - Try from: Config Summary → security configurations section
+    - Try from: Any linked security/compliance pages
+    - *What you need:* Shows your solution respects enterprise security requirements
 
 ---
 
-### 🎯 Priority: What's Most Valuable for Your Hackathon
+### 🔎 SECTION C: Application & Flow Deep-Dive (Target: `applications.csv` + `flows.csv`)
 
-**Tier 1 (Must-have):**
-1. Actual QM names, regions, and app mappings → proves your solution works on real data
-2. Pain points in their own words → direct quotes strengthen your problem narrative
-3. Topology diagrams → proves the "organically grown, dense mesh" problem exists
+**Go to: MQ Inventory (3479846400) + Grafana dashboards + any application catalogs**
 
-**Tier 2 (High impact):**
-4. Channel/queue counts → lets you show real-world % reduction numbers
-5. Existing naming conventions → shows your solution respects enterprise standards
-6. Onboarding process friction → directly maps to your "automation-ready" selling point
+11. **Application-to-QM cardinality** — Of the 839 apps, how many connect to:
+    - Exactly 1 QM? (ideal state)
+    - 2-3 QMs?
+    - 4+ QMs? (worst offenders)
+    - Try from: Grafana → app-to-QM relationship view
+    - Try from: Inventory → application-specific views
+    - Try from: Metrics page → any app connectivity stats
+    - *What you need:* The **distribution** is your before-picture. Your solution enforces 1:1, so show how far off reality is today
 
-**Tier 3 (Nice-to-have):**
-7. HA/clustering strategy → shows you understand enterprise constraints
-8. Message volumes → enables traffic-weighted optimization
-9. Governance processes → shows your solution fits into their change management
+12. **Application naming/ID scheme** — What's the application identifier format?
+    - Try from: Grafana → app ID field format
+    - Try from: Queue naming → if queues use app prefixes like `GMTS.`, `FNPS.`, `EPB.*`, the prefix IS effectively the App ID
+    - Try from: Any CMDB integration docs → the Postgres backend field names
+    - *What you need:* Map their app ID scheme to your `App_ID` CSV column
+
+13. **Queue-to-application ownership** — How is queue ownership determined?
+    - Try from: Queue naming convention docs → prefix = owning app?
+    - Try from: Grafana → queue-to-app mapping views
+    - Try from: CMDB records → queue ownership metadata
+    - *What you need:* The logic for deriving your `Owning_QM` and app-to-queue relationships
+
+14. **Producer/Consumer identification** — How do they know which apps PUT vs GET on a given queue?
+    - Try from: Channel directions (SDR = producer side, RCVR = consumer side)
+    - Try from: Application architecture docs linked from inventory
+    - Try from: Any integration/flow documentation
+    - *What you need:* This is your `Role (PUT/GET)` column — the hardest data to find, so try multiple angles
+
+15. **High-traffic application pairs** — Which apps communicate most heavily?
+    - Try from: Grafana → message rate dashboards, sort by volume
+    - Try from: Prometheus metrics → `ibmmq_queue_depth` or equivalent
+    - Try from: Any capacity planning docs
+    - *What you need:* Traffic weights for your graph edges — makes your Louvain clustering traffic-aware
 
 ---
 
-Copy this checklist and check off items as you navigate through each Confluence page, sub-link, and attachment. Any real-world data points or direct quotes you capture will directly strengthen your solution's **"Enterprise Realism"** scoring criterion.
+### 🔎 SECTION D: Pain Points & Incidents (Target: Problem narrative)
+
+**Go to: Every page's comments section, linked Jira tickets, any post-mortems**
+
+16. **Exact quotes about complexity** — Search for these keywords in every page + comments:
+    - `"sprawl"`, `"complex"`, `"manual"`, `"difficult"`, `"slow"`, `"risk"`, `"brittle"`
+    - `"too many"`, `"cleanup"`, `"unused"`, `"orphan"`, `"stale"`
+    - `"incident"`, `"outage"`, `"failure"`, `"loop"`, `"cycle"`
+    - *What you need:* **Direct quotes from internal engineers** are 10x more powerful than you paraphrasing the problem
+
+17. **Provisioning turnaround time** — How long does it take to:
+    - Create a new channel? (hours? days? weeks?)
+    - Onboard a new application onto MQ?
+    - Make a routing change?
+    - Try from: Any linked ServiceNow/Jira workflows
+    - Try from: Comments where engineers complain about timelines
+    - Try from: Metrics page → onboarding delays section
+    - *What you need:* Concrete numbers like "average 2 weeks to provision a new channel" — devastating evidence for your automation pitch
+
+18. **Configuration drift specifics** — What drifts between paired appliances?
+    - Try from: Config Summary → drift analysis
+    - Try from: Any reconciliation reports
+    - *What you need:* Shows that manual management is **actively causing production risk**
+
+19. **Prometheus exporter timeout details** — What fails and why?
+    - Try from: Metrics page → performance issues section
+    - Try from: Linked monitoring/alerting pages
+    - *What you need:* Evidence that the current scale is **beyond manual observability**
+
+---
+
+### 🔎 SECTION E: Migration & Future State (Target: Show your solution aligns with their direction)
+
+**Go to: Metrics - Delivery Plan (3689452015) + Architecture doc (3893366577)**
+
+20. **Migration from Heritage → NGDC** — What's the target architecture?
+    - Try from: Delivery Plan → migration timeline, wave definitions
+    - Try from: Architecture doc → NGDC topology design
+    - *What you need:* If they're already moving toward a hub-spoke or clustered model, your optimizer validates their direction
+
+21. **Wave definitions** — What goes in Wave 1 (44 appliances) vs Wave 2 (60 appliances)?
+    - Try from: Delivery Plan → wave breakdown
+    - Try from: Any attached Excel/CSV with wave assignments
+    - *What you need:* Shows you understand their phased approach and your solution can optimize per-wave
+
+22. **Automation targets** — What are they trying to automate?
+    - Try from: Any CI/CD or DevOps pages linked from Architecture doc
+    - Try from: Ansible/Terraform/MQSC script references
+    - *What you need:* Proves your CSV export → automation pipeline is exactly what they need
+
+---
+
+### 🔎 SECTION F: Hidden Gems — Check These Overlooked Places
+
+23. **Page version history** — On each of the 4 main pages, click `⋯` → `Page History`:
+    - Look at the **oldest version** — what was the original topology?
+    - Compare to **current** — this literally shows the "organic growth" over time
+    - *What you need:* A before/after within their own documentation proving topology complexity grew over time
+
+24. **Attached files on every page** — Click `⋯` → `Attachments`:
+    - Look for: `.xlsx`, `.csv`, `.vsd`/`.vsdx` (Visio), `.drawio`, `.pdf`
+    - Export any Grafana dashboard data to CSV if possible
+    - *What you need:* Raw data files are more valuable than screenshots
+
+25. **"Related Pages" and "Linked Issues"** — Every Confluence page:
+    - Check the bottom of each page for related/linked pages
+    - Check for embedded Jira issues — especially ones labeled `bug`, `incident`, `improvement`
+    - *What you need:* Connected documentation you might otherwise miss
+
+26. **Space-level search** — In the MQ Confluence space sidebar:
+    - Search for: `topology`, `simplification`, `cleanup`, `optimization`, `hub`, `gateway`, `routing`
+    - Search for: `runbook`, `provisioning`, `onboarding`, `automation`
+    - *What you need:* Pages you haven't found yet that could contain exactly the patterns your solution implements
+
+---
+
+### 📊 Summary: Data Collection Scorecard
+
+After your deep-dive, score yourself:
+
+| Data Point | Status | Source |
+|---|---|---|
+| 30+ real QM names with regions | ☐ | |
+| QM naming convention pattern | ☐ | |
+| Channel type breakdown (SDR/RCVR/SVRCONN/CLUS) | ☐ | |
+| App-to-QM cardinality distribution | ☐ | |
+| At least 5 direct "pain point" quotes | ☐ | |
+| Provisioning turnaround time (in days/weeks) | ☐ | |
+| Cross-datacenter channel count | ☐ | |
+| Producer/Consumer identification method | ☐ | |
+| Network Neighborhood → cluster mapping | ☐ | |
+| Migration target architecture description | ☐ | |
+| At least 2 attached data files (CSV/Excel) | ☐ | |
+| Topology diagram screenshot | ☐ | |
+
+**Goal: Fill at least 9/12 to have a competition-winning narrative backed by real enterprise data.**
